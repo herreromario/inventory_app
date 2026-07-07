@@ -5,13 +5,26 @@ import 'package:inventory_app/features/inventory/presentation/pages/add_product_
 import 'package:inventory_app/features/inventory/presentation/pages/inventory_page.dart';
 import 'package:inventory_app/features/inventory/presentation/pages/product_detail_page.dart';
 import 'package:inventory_app/features/inventory/presentation/pages/stats_page.dart';
+import 'package:inventory_app/shared/widgets/scaffold_shell.dart';
 
+// Configuración del enrutador GoRouter
 final GoRouter _router = GoRouter(
   routes: <RouteBase>[
-    GoRoute(
-      path: AppRoutes.home,
-      builder: (context, state) => const InventoryPage(),
+    // ShellRoute: contenedor con NavigationBar para rutas hijas
+    ShellRoute(
+      builder: (context, state, child) => ScaffoldShell(child: child),
+      routes: <RouteBase>[
+        GoRoute(
+          path: AppRoutes.home,
+          builder: (context, state) => const InventoryPage(),
+        ),
+        GoRoute(
+          path: AppRoutes.stats,
+          builder: (context, state) => const StatsPage(),
+        ),
+      ],
     ),
+    // Rutas fuera del shell: se apilan encima sin NavigationBar
     GoRoute(
       path: AppRoutes.addProduct,
       builder: (context, state) => const AddProductPage(),
@@ -19,10 +32,6 @@ final GoRouter _router = GoRouter(
     GoRoute(
       path: AppRoutes.productDetail('id'),
       builder: (context, state) => const ProductDetailPage(),
-    ),
-    GoRoute(
-      path: AppRoutes.stats,
-      builder: (context, state) => const StatsPage(),
     ),
   ],
 );

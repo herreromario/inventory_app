@@ -20,7 +20,7 @@ class InventoryPage extends StatelessWidget {
               child: const Text('Add Product'),
             ),
             ElevatedButton(
-              onPressed: () => context.push(AppRoutes.stats),
+              onPressed: () => context.go(AppRoutes.stats),
               child: const Text('View Stats'),
             ),
           ],
