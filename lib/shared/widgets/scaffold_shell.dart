@@ -2,11 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
 class ScaffoldShell extends StatelessWidget {
-  final Widget child; // Ruta activa inyectada por GoRouter (InventoryPage o StatsPage)
+  final Widget child;
 
   const ScaffoldShell({super.key, required this.child});
 
-  // Lee la URL actual y devuelve el índice del tab seleccionado (0 o 1)
+  // Lee la URL actual y devuelve el índice del tab seleccionado
   int _calculateSelectedIndex(BuildContext context) {
     final location = GoRouterState.of(context).uri.toString();
     if (location == '/') return 0;
@@ -14,7 +14,6 @@ class ScaffoldShell extends StatelessWidget {
     return 0;
   }
 
-  // Navega al tab tocado usando go() para reemplazar la ubicación actual
   void _onItemTapped(int index, BuildContext context) {
     switch (index) {
       case 0:
