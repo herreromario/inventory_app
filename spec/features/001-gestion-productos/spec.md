@@ -1,6 +1,6 @@
 # 001 · Gestión de productos
 
-**Estado:** propuesta
+**Estado:** completado
 
 ## Qué hace
 
@@ -16,15 +16,15 @@ features reutilizarán.
 
 ## Criterios de aceptación
 
-- [ ] Se puede agregar un producto con todos los campos requeridos.
-- [ ] Se puede editar cualquier campo de un producto existente.
-- [ ] Se puede eliminar un producto con confirmación.
-- [ ] La lista muestra todos los productos ordenados por fecha de creación.
-- [ ] Cada producto muestra indicador de stock (verde/amarillo/rojo).
-- [ ] Se muestra estado vacío cuando no hay productos.
-- [ ] Los datos persisten tras cerrar y reabrir la app (Hive).
-- [ ] `flutter analyze` pasa sin errores.
-- [ ] Todos los tests pasan.
+- [x] Se puede agregar un producto con todos los campos requeridos.
+- [x] Se puede editar cualquier campo de un producto existente.
+- [x] Se puede eliminar un producto con confirmación.
+- [x] La lista muestra todos los productos ordenados por fecha de creación.
+- [x] Cada producto muestra indicador de stock (verde/amarillo/rojo).
+- [x] Se muestra estado vacío cuando no hay productos.
+- [x] Los datos persisten tras cerrar y reabrir la app (Hive).
+- [x] `flutter analyze` pasa sin errores.
+- [x] Todos los tests pasan.
 
 ## Fuera de alcance
 

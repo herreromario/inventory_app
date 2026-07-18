@@ -2,8 +2,13 @@ import 'package:flutter/material.dart';
 
 class StockIndicator extends StatelessWidget {
   final int quantity;
+  final int minStock;
 
-  const StockIndicator({super.key, required this.quantity});
+  const StockIndicator({
+    super.key,
+    required this.quantity,
+    required this.minStock,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -15,8 +20,8 @@ class StockIndicator extends StatelessWidget {
   }
 
   Color _getColor() {
-    if (quantity <= 5) return Colors.red;
-    if (quantity <= 15) return Colors.amber;
+    if (quantity < minStock) return Colors.red;
+    if (quantity == minStock) return Colors.amber;
     return Colors.green;
   }
 }

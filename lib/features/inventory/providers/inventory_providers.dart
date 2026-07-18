@@ -28,34 +28,53 @@ class InventoryNotifier extends StateNotifier<List<Product>> {
     state = _repository.getProducts();
   }
 
+  Product? getProductById(String id) {
+    try {
+      return state.firstWhere((p) => p.id == id);
+    } catch (_) {
+      return null;
+    }
+  }
+
   void addProduct({
     required String name,
     String? description,
     required int quantity,
+    required double price,
+    String? category,
+    String? sku,
+    required int minStock,
   }) {
+    final now = DateTime.now();
     final product = Product(
       id: _uuid.v4(),
       name: name,
       description: description,
       quantity: quantity,
+      price: price,
+      category: category,
+      sku: sku,
+      minStock: minStock,
+      createdAt: now,
+      updatedAt: now,
     );
     state = [...state, product];
-    _repository.saveProducts(state);
-  }
-
-  void deleteProduct(String id) {
-    state = [
-      for (final product in state)
-        if (product.id != id) product,
-    ];
-    _repository.saveProducts(state);
+    _repository.add(product);
   }
 
   void updateProduct(String id, Product updated) {
     state = [
-      for (final product in state)
-        if (product.id == id) updated else product,
+      for (final p in state)
+        if (p.id == id) updated else p,
     ];
-    _repository.saveProducts(state);
+    _repository.update(updated);
+  }
+
+  void deleteProduct(String id) {
+    state = [
+      for (final p in state)
+        if (p.id != id) p,
+    ];
+    _repository.delete(id);
   }
 }

@@ -11,7 +11,37 @@ class ProductRepository {
     return List<Product>.from(_box.get(_key) ?? []);
   }
 
-  void saveProducts(List<Product> products) {
+  Product? getById(String id) {
+    final products = getProducts();
+    try {
+      return products.firstWhere((p) => p.id == id);
+    } catch (_) {
+      return null;
+    }
+  }
+
+  void add(Product product) {
+    final products = getProducts();
+    products.add(product);
+    _save(products);
+  }
+
+  void update(Product updated) {
+    final products = getProducts();
+    final index = products.indexWhere((p) => p.id == updated.id);
+    if (index != -1) {
+      products[index] = updated;
+      _save(products);
+    }
+  }
+
+  void delete(String id) {
+    final products = getProducts();
+    products.removeWhere((p) => p.id == id);
+    _save(products);
+  }
+
+  void _save(List<Product> products) {
     _box.put(_key, products);
   }
 }

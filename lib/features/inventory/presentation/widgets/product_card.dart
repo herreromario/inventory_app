@@ -17,9 +17,14 @@ class ProductCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ListTile(
-      leading: StockIndicator(quantity: product.quantity),
+      leading: StockIndicator(
+        quantity: product.quantity,
+        minStock: product.minStock,
+      ),
       title: Text(product.name),
-      subtitle: Text('Quantity: ${product.quantity}'),
+      subtitle: Text(
+        '${product.category ?? "Sin categoría"} · \$${product.price.toStringAsFixed(2)} · Qty: ${product.quantity}',
+      ),
       trailing: onDelete != null
           ? IconButton(
               icon: const Icon(Icons.delete),

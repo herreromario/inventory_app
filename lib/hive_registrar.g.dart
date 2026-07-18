@@ -3,16 +3,19 @@
 // Check in to version control
 
 import 'package:hive_ce/hive_ce.dart';
+import 'package:inventory_app/features/inventory/data/models/category.dart';
 import 'package:inventory_app/features/inventory/data/models/product.dart';
 
 extension HiveRegistrar on HiveInterface {
   void registerAdapters() {
+    registerAdapter(CategoryAdapter());
     registerAdapter(ProductAdapter());
   }
 }
 
 extension IsolatedHiveRegistrar on IsolatedHiveInterface {
   void registerAdapters() {
+    registerAdapter(CategoryAdapter());
     registerAdapter(ProductAdapter());
   }
 }

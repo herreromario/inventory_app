@@ -1,22 +1,22 @@
 # 001 · Gestión de productos — Tareas
 
-- [ ] Crear modelo `Product` con anotaciones @HiveType
-- [ ] Ejecutar build_runner para generar ProductAdapter
-- [ ] Implementar `ProductRepository` con métodos CRUD
-- [ ] Crear `InventoryNotifier` (StateNotifier) y providers
-- [ ] Crear widget `ProductCard`
-- [ ] Crear widget `StockIndicator`
-- [ ] Crear `AddProductPage` (formulario de alta)
-- [ ] Crear `ProductDetailPage` (detalle/edición)
-- [ ] Crear `InventoryPage` (lista principal)
-- [ ] Crear `EmptyState` para lista vacía
-- [ ] Configurar rutas en GoRouter
-- [ ] Crear tests unitarios para ProductRepository
-- [ ] Crear tests unitarios para InventoryNotifier
-- [ ] Crear widget tests para InventoryPage
-- [ ] Crear widget tests para AddProductPage
-- [ ] Ejecutar `flutter analyze` sin errores
-- [ ] Ejecutar `flutter test` sin errores
-- [ ] Actualizar documentación si aplica
-- [ ] Validar contra los criterios de aceptación de `spec.md`
-- [ ] Mover la feature a "Hecho" en `../../constitution/roadmap.md`
+- [x] Crear modelo `Product` con anotaciones @HiveType
+- [x] Ejecutar build_runner para generar ProductAdapter
+- [x] Implementar `ProductRepository` con métodos CRUD
+- [x] Crear `InventoryNotifier` (StateNotifier) y providers
+- [x] Crear widget `ProductCard`
+- [x] Crear widget `StockIndicator`
+- [x] Crear `AddProductPage` (formulario de alta)
+- [x] Crear `ProductDetailPage` (detalle/edición)
+- [x] Crear `InventoryPage` (lista principal)
+- [x] Crear `EmptyState` para lista vacía
+- [x] Configurar rutas en GoRouter
+- [x] Crear tests unitarios para ProductRepository
+- [x] Crear tests unitarios para InventoryNotifier
+- [x] Crear widget tests para InventoryPage
+- [x] Crear widget tests para AddProductPage
+- [x] Ejecutar `flutter analyze` sin errores
+- [x] Ejecutar `flutter test` sin errores
+- [x] Actualizar documentación si aplica
+- [x] Validar contra los criterios de aceptación de `spec.md`
+- [x] Mover la feature a "Hecho" en `../../constitution/roadmap.md`
