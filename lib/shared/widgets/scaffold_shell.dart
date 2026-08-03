@@ -10,7 +10,8 @@ class ScaffoldShell extends StatelessWidget {
   int _calculateSelectedIndex(BuildContext context) {
     final location = GoRouterState.of(context).uri.toString();
     if (location == '/') return 0;
-    if (location == '/stats') return 1;
+    if (location == '/movement-history') return 1;
+    if (location == '/stats') return 2;
     return 0;
   }
 
@@ -20,6 +21,9 @@ class ScaffoldShell extends StatelessWidget {
         context.go('/');
         break;
       case 1:
+        context.go('/movement-history');
+        break;
+      case 2:
         context.go('/stats');
         break;
     }
@@ -37,6 +41,11 @@ class ScaffoldShell extends StatelessWidget {
             icon: Icon(Icons.inventory_2_outlined),
             selectedIcon: Icon(Icons.inventory_2),
             label: 'Inventory',
+          ),
+          NavigationDestination(
+            icon: Icon(Icons.swap_horiz_outlined),
+            selectedIcon: Icon(Icons.swap_horiz),
+            label: 'Movements',
           ),
           NavigationDestination(
             icon: Icon(Icons.bar_chart_outlined),

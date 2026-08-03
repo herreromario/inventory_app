@@ -1,6 +1,6 @@
 # 002 · Movimientos de stock
 
-**Estado:** propuesta
+**Estado:** completado
 
 ## Qué hace
 

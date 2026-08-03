@@ -1,10 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import 'package:inventory_app/core/constants/app_constants.dart';
 import 'package:inventory_app/features/inventory/data/models/product.dart';
 import 'package:inventory_app/features/inventory/presentation/widgets/category_picker.dart';
+import 'package:inventory_app/features/inventory/presentation/widgets/date_group_helper.dart';
+import 'package:inventory_app/features/inventory/presentation/widgets/movement_card.dart';
 import 'package:inventory_app/features/inventory/presentation/widgets/stock_indicator.dart';
 import 'package:inventory_app/features/inventory/providers/inventory_providers.dart';
+import 'package:inventory_app/features/inventory/providers/movement_providers.dart';
 import 'package:inventory_app/shared/widgets/confirm_dialog.dart';
 
 class ProductDetailPage extends ConsumerStatefulWidget {
@@ -148,6 +152,16 @@ class _ProductDetailPageState extends ConsumerState<ProductDetailPage> {
             ),
         ],
       ),
+      floatingActionButton: !_isEditing
+          ? FloatingActionButton(
+              onPressed: () {
+                context.push(
+                  '${AppRoutes.addMovement}?productId=${product.id}',
+                );
+              },
+              child: const Icon(Icons.add),
+            )
+          : null,
       body: _isEditing ? _buildEditForm() : _buildDetail(product),
     );
   }
@@ -191,6 +205,8 @@ class _ProductDetailPageState extends ConsumerState<ProductDetailPage> {
             'Updated: ${product.updatedAt.toLocal().toString().split('.').first}',
             style: Theme.of(context).textTheme.bodySmall,
           ),
+          const SizedBox(height: 16),
+          _buildMovementSection(product),
         ],
       ),
     );
@@ -210,6 +226,74 @@ class _ProductDetailPageState extends ConsumerState<ProductDetailPage> {
             ),
           ),
           Expanded(child: Text(value)),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildMovementSection(Product product) {
+    final movements = ref.watch(movementProvider);
+    final productMovements = movements
+        .where((m) => m.productId == product.id)
+        .toList()
+      ..sort((a, b) => b.date.compareTo(a.date));
+
+    final groups = groupMovementsByDate(productMovements);
+
+    return Theme(
+      data: Theme.of(context).copyWith(dividerColor: Colors.transparent),
+      child: ExpansionTile(
+        tilePadding: EdgeInsets.zero,
+        title: Text(
+          'Movement History (${productMovements.length})',
+          style: const TextStyle(fontWeight: FontWeight.bold),
+        ),
+        children: [
+          if (productMovements.isEmpty)
+            const Padding(
+              padding: EdgeInsets.all(16),
+              child: Text('No movements yet'),
+            )
+          else
+            ...groups.map((group) => Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Padding(
+                      padding: const EdgeInsets.fromLTRB(0, 8, 0, 4),
+                      child: Text(
+                        group.label,
+                        style: const TextStyle(
+                          fontSize: 13,
+                          fontWeight: FontWeight.bold,
+                          color: Colors.grey,
+                        ),
+                      ),
+                    ),
+                    ...group.movements.map((m) {
+                          return MovementCard(
+                            movement: m,
+                            onEdit: () {
+                              context.push(
+                                '${AppRoutes.addMovement}?movementId=${m.id}',
+                              );
+                            },
+                            onDelete: () async {
+                              final confirmed = await ConfirmDialog.show(
+                                context: context,
+                                title: 'Delete Movement',
+                                message:
+                                    'Are you sure you want to delete this movement?',
+                              );
+                              if (confirmed && mounted) {
+                                ref
+                                    .read(movementProvider.notifier)
+                                    .deleteMovement(m.id);
+                              }
+                            },
+                          );
+                        }),
+                  ],
+                )),
         ],
       ),
     );

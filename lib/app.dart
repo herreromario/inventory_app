@@ -2,9 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:inventory_app/core/constants/app_constants.dart';
 import 'package:inventory_app/core/theme/app_theme.dart';
+import 'package:inventory_app/features/inventory/presentation/pages/add_movement_page.dart';
 import 'package:inventory_app/features/inventory/presentation/pages/add_product_page.dart';
 import 'package:inventory_app/features/inventory/presentation/pages/category_page.dart';
 import 'package:inventory_app/features/inventory/presentation/pages/inventory_page.dart';
+import 'package:inventory_app/features/inventory/presentation/pages/movement_history_page.dart';
 import 'package:inventory_app/features/inventory/presentation/pages/product_detail_page.dart';
 import 'package:inventory_app/features/inventory/presentation/pages/stats_page.dart';
 import 'package:inventory_app/shared/widgets/scaffold_shell.dart';
@@ -17,6 +19,10 @@ final GoRouter _router = GoRouter(
         GoRoute(
           path: AppRoutes.home,
           builder: (context, state) => const InventoryPage(),
+        ),
+        GoRoute(
+          path: AppRoutes.movementHistory,
+          builder: (context, state) => const MovementHistoryPage(),
         ),
         GoRoute(
           path: AppRoutes.stats,
@@ -35,6 +41,14 @@ final GoRouter _router = GoRouter(
     GoRoute(
       path: AppRoutes.categories,
       builder: (context, state) => const CategoryPage(),
+    ),
+    GoRoute(
+      path: AppRoutes.addMovement,
+      builder: (context, state) {
+        final productId = state.uri.queryParameters['productId'];
+        final movementId = state.uri.queryParameters['movementId'];
+        return AddMovementPage(productId: productId, movementId: movementId);
+      },
     ),
   ],
 );

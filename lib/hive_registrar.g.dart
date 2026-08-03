@@ -5,17 +5,22 @@
 import 'package:hive_ce/hive_ce.dart';
 import 'package:inventory_app/features/inventory/data/models/category.dart';
 import 'package:inventory_app/features/inventory/data/models/product.dart';
+import 'package:inventory_app/features/inventory/data/models/stock_movement.dart';
 
 extension HiveRegistrar on HiveInterface {
   void registerAdapters() {
     registerAdapter(CategoryAdapter());
+    registerAdapter(MovementTypeAdapter());
     registerAdapter(ProductAdapter());
+    registerAdapter(StockMovementAdapter());
   }
 }
 
 extension IsolatedHiveRegistrar on IsolatedHiveInterface {
   void registerAdapters() {
     registerAdapter(CategoryAdapter());
+    registerAdapter(MovementTypeAdapter());
     registerAdapter(ProductAdapter());
+    registerAdapter(StockMovementAdapter());
   }
 }

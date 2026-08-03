@@ -1,20 +1,20 @@
 # 002 · Movimientos de stock — Tareas
 
-- [ ] Crear enum `MovementType` y modelo `StockMovement`
-- [ ] Ejecutar build_runner para generar adapters
-- [ ] Implementar `MovementRepository`
-- [ ] Crear `MovementNotifier` y providers
-- [ ] Crear widget `MovementCard`
-- [ ] Crear `AddMovementPage` (formulario)
-- [ ] Crear `MovementHistoryPage` (historial global)
-- [ ] Actualizar `InventoryPage` con acceso a movimientos
-- [ ] Actualizar `ProductDetailPage` con historial del producto
-- [ ] Implementar validación: no salida > stock disponible
-- [ ] Crear tests unitarios para MovementRepository
-- [ ] Crear tests unitarios para MovementNotifier
-- [ ] Crear widget tests para AddMovementPage
-- [ ] Ejecutar `flutter analyze` sin errores
-- [ ] Ejecutar `flutter test` sin errores
-- [ ] Actualizar documentación si aplica
-- [ ] Validar contra los criterios de aceptación de `spec.md`
-- [ ] Mover la feature a "Hecho" en `../../constitution/roadmap.md`
+- [x] Crear enum `MovementType` y modelo `StockMovement`
+- [x] Ejecutar build_runner para generar adapters
+- [x] Implementar `MovementRepository`
+- [x] Crear `MovementNotifier` y providers
+- [x] Crear widget `MovementCard`
+- [x] Crear `AddMovementPage` (formulario)
+- [x] Crear `MovementHistoryPage` (historial global)
+- [x] Actualizar `InventoryPage` con acceso a movimientos
+- [x] Actualizar `ProductDetailPage` con historial del producto
+- [x] Implementar validación: no salida > stock disponible
+- [x] Crear tests unitarios para MovementRepository
+- [x] Crear tests unitarios para MovementNotifier
+- [x] Crear widget tests para AddMovementPage
+- [x] Ejecutar `flutter analyze` sin errores
+- [x] Ejecutar `flutter test` sin errores
+- [x] Actualizar documentación si aplica
+- [x] Validar contra los criterios de aceptación de `spec.md`
+- [x] Mover la feature a "Hecho" en `../../constitution/roadmap.md`

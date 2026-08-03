@@ -6,12 +6,14 @@ class ProductCard extends StatelessWidget {
   final Product product;
   final VoidCallback? onDelete;
   final VoidCallback? onTap;
+  final VoidCallback? onMovement;
 
   const ProductCard({
     super.key,
     required this.product,
     this.onDelete,
     this.onTap,
+    this.onMovement,
   });
 
   @override
@@ -25,10 +27,21 @@ class ProductCard extends StatelessWidget {
       subtitle: Text(
         '${product.category ?? "Sin categoría"} · \$${product.price.toStringAsFixed(2)} · Qty: ${product.quantity}',
       ),
-      trailing: onDelete != null
-          ? IconButton(
-              icon: const Icon(Icons.delete),
-              onPressed: onDelete,
+      trailing: (onDelete != null || onMovement != null)
+          ? Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                if (onMovement != null)
+                  IconButton(
+                    icon: const Icon(Icons.swap_horiz),
+                    onPressed: onMovement,
+                  ),
+                if (onDelete != null)
+                  IconButton(
+                    icon: const Icon(Icons.delete),
+                    onPressed: onDelete,
+                  ),
+              ],
             )
           : null,
       onTap: onTap,

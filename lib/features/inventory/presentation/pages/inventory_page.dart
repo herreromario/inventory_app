@@ -47,6 +47,11 @@ class InventoryPage extends ConsumerWidget {
                   onTap: () {
                     context.push(AppRoutes.productDetail(product.id));
                   },
+                  onMovement: () {
+                    context.push(
+                      '${AppRoutes.addMovement}?productId=${product.id}',
+                    );
+                  },
                 );
               },
             ),
