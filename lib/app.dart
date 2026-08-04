@@ -9,6 +9,7 @@ import 'package:inventory_app/features/inventory/presentation/pages/inventory_pa
 import 'package:inventory_app/features/inventory/presentation/pages/movement_history_page.dart';
 import 'package:inventory_app/features/inventory/presentation/pages/product_detail_page.dart';
 import 'package:inventory_app/features/inventory/presentation/pages/stats_page.dart';
+import 'package:inventory_app/features/inventory/presentation/pages/category_value_page.dart';
 import 'package:inventory_app/shared/widgets/scaffold_shell.dart';
 
 final GoRouter _router = GoRouter(
@@ -41,6 +42,10 @@ final GoRouter _router = GoRouter(
     GoRoute(
       path: AppRoutes.categories,
       builder: (context, state) => const CategoryPage(),
+    ),
+    GoRoute(
+      path: AppRoutes.categoryValue,
+      builder: (context, state) => const CategoryValuePage(),
     ),
     GoRoute(
       path: AppRoutes.addMovement,

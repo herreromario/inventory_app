@@ -4,6 +4,7 @@ class AppRoutes {
   static String productDetail(String id) => '/product/$id';
   static const String stats = '/stats';
   static const String categories = '/categories';
+  static const String categoryValue = '/category-value';
   static const String addMovement = '/add-movement';
   static const String movementHistory = '/movement-history';
 }

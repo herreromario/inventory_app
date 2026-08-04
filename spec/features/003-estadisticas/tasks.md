@@ -1,15 +1,24 @@
 # 003 · Estadísticas — Tareas
 
-- [ ] Crear `StatsProvider` con métricas derivadas
-- [ ] Crear widget `StatsCard`
-- [ ] Crear widget `CategoryChart` (barras simples)
-- [ ] Crear widget `RecentMovements`
-- [ ] Crear `StatsPage`
-- [ ] Integrar en GoRouter con tab de navegación
-- [ ] Crear tests unitarios para StatsProvider
-- [ ] Crear widget tests para StatsPage
-- [ ] Ejecutar `flutter analyze` sin errores
-- [ ] Ejecutar `flutter test` sin errores
-- [ ] Actualizar documentación si aplica
-- [ ] Validar contra los criterios de aceptación de `spec.md`
-- [ ] Mover la feature a "Hecho" en `../../constitution/roadmap.md`
+- [x] Crear `StatsProvider` con métricas derivadas
+- [x] Crear widget `StatsCard`
+- [x] Crear widget `CategoryChart` (fl_chart)
+- [x] Crear widget `RecentMovements`
+- [x] Crear `StatsEmptyView` (estado vacío específico)
+- [x] Crear `StatsPage`
+- [x] Integrar en GoRouter con tab de navegación (ya existía)
+- [x] Crear tests unitarios para StatsProvider
+- [x] Crear widget tests para StatsPage
+- [x] Ejecutar `flutter analyze` sin errores
+- [x] Ejecutar `flutter test` sin errores
+- [x] Actualizar documentación (roadmap.md)
+- [x] Validar contra los criterios de aceptación de `spec.md`
+- [x] Mover la feature a "Hecho" en `../../constitution/roadmap.md`
+- [x] Cambiar `productsByCategory` por `valueByCategory` (valor monetario)
+- [x] Actualizar `CategoryChart` para mostrar top 3 categorías con formato de moneda
+- [x] Crear `CategoryValuePage` con tarjetas expandibles
+- [x] Añadir TextButton "Ver todas las categorías" en StatsPage
+- [x] Crear tests para CategoryValuePage
+- [x] Reescribir CategoryChart con barras horizontales personalizadas
+- [x] Quitar condición del botón (siempre visible)
+- [x] Eliminar fl_chart de dependencias
