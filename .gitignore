@@ -49,3 +49,6 @@ app.*.map.json
 # Hive test artifacts
 *.hive
 *.lock
+
+# DevTools
+devtools_options.yaml

@@ -3,6 +3,8 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:inventory_app/core/constants/app_constants.dart';
 import 'package:inventory_app/features/inventory/presentation/widgets/product_card.dart';
+import 'package:inventory_app/features/inventory/presentation/widgets/sort_bottom_sheet.dart';
+import 'package:inventory_app/features/inventory/providers/filter_providers.dart';
 import 'package:inventory_app/features/inventory/providers/inventory_providers.dart';
 import 'package:inventory_app/shared/widgets/confirm_dialog.dart';
 import 'package:inventory_app/shared/widgets/empty_state.dart';
@@ -12,10 +14,9 @@ class InventoryPage extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final products = ref.watch(inventoryProvider);
-
-    final sorted = List.of(products)
-      ..sort((a, b) => b.createdAt.compareTo(a.createdAt));
+    final products = ref.watch(filteredProductsProvider);
+    final filter = ref.watch(filterProvider);
+    final hasProducts = ref.watch(inventoryProvider).isNotEmpty;
 
     return Scaffold(
       appBar: AppBar(title: const Text('Inventory')),
@@ -23,38 +24,104 @@ class InventoryPage extends ConsumerWidget {
         onPressed: () => context.push(AppRoutes.addProduct),
         child: const Icon(Icons.add),
       ),
-      body: sorted.isEmpty
-          ? const EmptyState(message: 'No products yet')
-          : ListView.builder(
-              itemCount: sorted.length,
-              itemBuilder: (context, index) {
-                final product = sorted[index];
-                return ProductCard(
-                  product: product,
-                  onDelete: () async {
-                    final confirmed = await ConfirmDialog.show(
-                      context: context,
-                      title: 'Delete Product',
-                      message:
-                          'Are you sure you want to delete "${product.name}"?',
-                    );
-                    if (confirmed && context.mounted) {
-                      ref
-                          .read(inventoryProvider.notifier)
-                          .deleteProduct(product.id);
-                    }
-                  },
-                  onTap: () {
-                    context.push(AppRoutes.productDetail(product.id));
-                  },
-                  onMovement: () {
-                    context.push(
-                      '${AppRoutes.addMovement}?productId=${product.id}',
-                    );
-                  },
-                );
-              },
-            ),
+      body: hasProducts
+          ? Column(
+              children: [
+                Padding(
+                  padding: const EdgeInsets.fromLTRB(16, 8, 16, 0),
+                  child: TextField(
+                    decoration: InputDecoration(
+                      hintText: 'Search products...',
+                      prefixIcon: const Icon(Icons.search),
+                      suffixIcon: filter.query.isNotEmpty
+                          ? IconButton(
+                              icon: const Icon(Icons.clear),
+                              onPressed: () {
+                                ref
+                                    .read(filterProvider.notifier)
+                                    .setQuery('');
+                              },
+                            )
+                          : null,
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(12),
+                      ),
+                      contentPadding: const EdgeInsets.symmetric(
+                        horizontal: 16,
+                        vertical: 12,
+                      ),
+                    ),
+                    onChanged: (value) {
+                      ref.read(filterProvider.notifier).setQuery(value);
+                    },
+                  ),
+                ),
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                  child: Row(
+                    children: [
+                      Expanded(
+                        child: OutlinedButton.icon(
+                          onPressed: () => context.push(AppRoutes.filters),
+                          icon: Badge(
+                            label: Text('${filter.activeFilterCount}'),
+                            isLabelVisible: filter.activeFilterCount > 0,
+                            child: const Icon(Icons.tune, size: 18),
+                          ),
+                          label: const Text('Filters'),
+                        ),
+                      ),
+                      const SizedBox(width: 8),
+                      Expanded(
+                        child: OutlinedButton.icon(
+                          onPressed: () => SortBottomSheet.show(context),
+                          icon: const Icon(Icons.sort, size: 18),
+                          label: const Text('Sort'),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+                const Divider(height: 1),
+                Expanded(
+                  child: products.isEmpty
+                      ? const EmptyState(message: 'No matching products')
+                      : ListView.builder(
+                          itemCount: products.length,
+                          itemBuilder: (context, index) {
+                            final product = products[index];
+                            return ProductCard(
+                              product: product,
+                              onDelete: () async {
+                                final confirmed = await ConfirmDialog.show(
+                                  context: context,
+                                  title: 'Delete Product',
+                                  message:
+                                      'Are you sure you want to delete "${product.name}"?',
+                                );
+                                if (confirmed && context.mounted) {
+                                  ref
+                                      .read(inventoryProvider.notifier)
+                                      .deleteProduct(product.id);
+                                }
+                              },
+                              onTap: () {
+                                context.push(
+                                  AppRoutes.productDetail(product.id),
+                                );
+                              },
+                              onMovement: () {
+                                context.push(
+                                  '${AppRoutes.addMovement}?productId=${product.id}',
+                                );
+                              },
+                            );
+                          },
+                        ),
+                ),
+              ],
+            )
+          : const EmptyState(message: 'No products yet'),
     );
   }
 }

@@ -7,4 +7,6 @@ class AppRoutes {
   static const String categoryValue = '/category-value';
   static const String addMovement = '/add-movement';
   static const String movementHistory = '/movement-history';
+  static const String filters = '/filters';
+  static const String categoryPicker = '/category-picker';
 }

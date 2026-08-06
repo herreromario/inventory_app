@@ -5,6 +5,8 @@ import 'package:inventory_app/core/theme/app_theme.dart';
 import 'package:inventory_app/features/inventory/presentation/pages/add_movement_page.dart';
 import 'package:inventory_app/features/inventory/presentation/pages/add_product_page.dart';
 import 'package:inventory_app/features/inventory/presentation/pages/category_page.dart';
+import 'package:inventory_app/features/inventory/presentation/pages/category_picker_page.dart';
+import 'package:inventory_app/features/inventory/presentation/pages/filter_page.dart';
 import 'package:inventory_app/features/inventory/presentation/pages/inventory_page.dart';
 import 'package:inventory_app/features/inventory/presentation/pages/movement_history_page.dart';
 import 'package:inventory_app/features/inventory/presentation/pages/product_detail_page.dart';
@@ -20,14 +22,26 @@ final GoRouter _router = GoRouter(
         GoRoute(
           path: AppRoutes.home,
           builder: (context, state) => const InventoryPage(),
+          pageBuilder: (context, state) => NoTransitionPage(
+            key: state.pageKey,
+            child: const InventoryPage(),
+          ),
         ),
         GoRoute(
           path: AppRoutes.movementHistory,
           builder: (context, state) => const MovementHistoryPage(),
+          pageBuilder: (context, state) => NoTransitionPage(
+            key: state.pageKey,
+            child: const MovementHistoryPage(),
+          ),
         ),
         GoRoute(
           path: AppRoutes.stats,
           builder: (context, state) => const StatsPage(),
+          pageBuilder: (context, state) => NoTransitionPage(
+            key: state.pageKey,
+            child: const StatsPage(),
+          ),
         ),
       ],
     ),
@@ -53,6 +67,17 @@ final GoRouter _router = GoRouter(
         final productId = state.uri.queryParameters['productId'];
         final movementId = state.uri.queryParameters['movementId'];
         return AddMovementPage(productId: productId, movementId: movementId);
+      },
+    ),
+    GoRoute(
+      path: AppRoutes.filters,
+      builder: (context, state) => const FilterPage(),
+    ),
+    GoRoute(
+      path: AppRoutes.categoryPicker,
+      builder: (context, state) {
+        final selectedCategory = state.extra as String?;
+        return CategoryPickerPage(selectedCategory: selectedCategory);
       },
     ),
   ],
