@@ -28,11 +28,11 @@ class InventoryStats {
   }
 }
 
-String getProductName(List<Product> products, String productId) {
+String getProductName(List<Product> products, String productId, {String fallback = 'Unknown Product'}) {
   try {
     return products.firstWhere((p) => p.id == productId).name;
   } catch (_) {
-    return 'Producto desconocido';
+    return fallback;
   }
 }
 

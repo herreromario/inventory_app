@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:inventory_app/features/inventory/providers/category_providers.dart';
+import 'package:inventory_app/l10n/app_localizations.dart';
 import 'package:inventory_app/shared/widgets/confirm_dialog.dart';
 import 'package:inventory_app/shared/widgets/empty_state.dart';
 
@@ -11,18 +12,19 @@ class CategoryPage extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final categories = ref.watch(categoryProvider);
+    final l10n = AppLocalizations.of(context)!;
     final sorted = List.of(categories)
       ..sort((a, b) => a.name.compareTo(b.name));
 
     return Scaffold(
-      appBar: AppBar(title: const Text('Categories')),
+      appBar: AppBar(title: Text(l10n.categories)),
       floatingActionButton: FloatingActionButton(
         onPressed: () => _showCreateDialog(context, ref),
         child: const Icon(Icons.add),
       ),
       body: sorted.isEmpty
-          ? const EmptyState(
-              message: 'No categories yet',
+          ? EmptyState(
+              message: l10n.noCategoriesYet,
               icon: Icons.category_outlined,
             )
           : ListView.builder(
@@ -44,9 +46,8 @@ class CategoryPage extends ConsumerWidget {
                         onPressed: () async {
                           final confirmed = await ConfirmDialog.show(
                             context: context,
-                            title: 'Delete Category',
-                            message:
-                                'Are you sure you want to delete "${category.name}"?',
+                            title: l10n.deleteCategory,
+                            message: l10n.confirmDeleteCategory(category.name),
                           );
                           if (confirmed && context.mounted) {
                             ref
@@ -66,23 +67,24 @@ class CategoryPage extends ConsumerWidget {
 
   void _showCreateDialog(BuildContext context, WidgetRef ref) {
     final controller = TextEditingController();
+    final l10n = AppLocalizations.of(context)!;
 
     showDialog(
       context: context,
       builder: (context) => AlertDialog(
-        title: const Text('New Category'),
+        title: Text(l10n.newCategory),
         content: TextField(
           controller: controller,
-          decoration: const InputDecoration(
-            labelText: 'Category Name',
-            border: OutlineInputBorder(),
+          decoration: InputDecoration(
+            labelText: l10n.categoryNameLabel,
+            border: const OutlineInputBorder(),
           ),
           autofocus: true,
         ),
         actions: [
           TextButton(
             onPressed: () => Navigator.of(context).pop(),
-            child: const Text('Cancel'),
+            child: Text(l10n.cancel),
           ),
           FilledButton(
             onPressed: () {
@@ -92,7 +94,7 @@ class CategoryPage extends ConsumerWidget {
                 Navigator.of(context).pop();
               }
             },
-            child: const Text('Create'),
+            child: Text(l10n.create),
           ),
         ],
       ),
@@ -102,23 +104,24 @@ class CategoryPage extends ConsumerWidget {
   void _showEditDialog(
       BuildContext context, WidgetRef ref, String id, String currentName) {
     final controller = TextEditingController(text: currentName);
+    final l10n = AppLocalizations.of(context)!;
 
     showDialog(
       context: context,
       builder: (context) => AlertDialog(
-        title: const Text('Edit Category'),
+        title: Text(l10n.editCategory),
         content: TextField(
           controller: controller,
-          decoration: const InputDecoration(
-            labelText: 'Category Name',
-            border: OutlineInputBorder(),
+          decoration: InputDecoration(
+            labelText: l10n.categoryNameLabel,
+            border: const OutlineInputBorder(),
           ),
           autofocus: true,
         ),
         actions: [
           TextButton(
             onPressed: () => Navigator.of(context).pop(),
-            child: const Text('Cancel'),
+            child: Text(l10n.cancel),
           ),
           FilledButton(
             onPressed: () {
@@ -130,7 +133,7 @@ class CategoryPage extends ConsumerWidget {
                 Navigator.of(context).pop();
               }
             },
-            child: const Text('Save'),
+            child: Text(l10n.save),
           ),
         ],
       ),

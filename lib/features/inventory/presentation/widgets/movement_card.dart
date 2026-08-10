@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:inventory_app/features/inventory/data/models/stock_movement.dart';
+import 'package:inventory_app/l10n/app_localizations.dart';
 
 class MovementCard extends StatelessWidget {
   final StockMovement movement;
@@ -18,6 +19,7 @@ class MovementCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final isEntry = movement.type == MovementType.entry;
+    final l10n = AppLocalizations.of(context)!;
 
     return ListTile(
       leading: Icon(
@@ -34,7 +36,7 @@ class MovementCard extends StatelessWidget {
               style: const TextStyle(color: Colors.black87),
             ),
           Text(
-            '${isEntry ? "Entry" : "Exit"} · Qty: ${movement.quantity}',
+            '${isEntry ? l10n.entry : l10n.exit} · ${l10n.quantityAbbreviation}: ${movement.quantity}',
           ),
         ],
       ),

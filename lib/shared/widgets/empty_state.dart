@@ -1,12 +1,15 @@
 import 'package:flutter/material.dart';
+import 'package:inventory_app/l10n/app_localizations.dart';
 
 class EmptyState extends StatelessWidget {
-  final String message;
+  final String? messageKey;
+  final String? message;
   final IconData icon;
 
   const EmptyState({
     super.key,
-    this.message = 'No items found',
+    this.messageKey,
+    this.message,
     this.icon = Icons.inventory_2_outlined,
   });
 
@@ -18,7 +21,10 @@ class EmptyState extends StatelessWidget {
         children: [
           Icon(icon, size: 64, color: Colors.grey),
           const SizedBox(height: 16),
-          Text(message, style: Theme.of(context).textTheme.bodyLarge),
+          Text(
+            message ?? AppLocalizations.of(context)!.noItemsFound,
+            style: Theme.of(context).textTheme.bodyLarge,
+          ),
         ],
       ),
     );

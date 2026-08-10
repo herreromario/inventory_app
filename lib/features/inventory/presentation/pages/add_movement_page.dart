@@ -4,6 +4,7 @@ import 'package:go_router/go_router.dart';
 import 'package:inventory_app/features/inventory/data/models/stock_movement.dart';
 import 'package:inventory_app/features/inventory/providers/inventory_providers.dart';
 import 'package:inventory_app/features/inventory/providers/movement_providers.dart';
+import 'package:inventory_app/l10n/app_localizations.dart';
 
 class AddMovementPage extends ConsumerStatefulWidget {
   final String? productId;
@@ -58,9 +59,10 @@ class _AddMovementPageState extends ConsumerState<AddMovementPage> {
 
   void _submit() {
     if (!_formKey.currentState!.validate()) return;
+    final l10n = AppLocalizations.of(context)!;
     if (_selectedProductId == null) {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Please select a product')),
+        SnackBar(content: Text(l10n.pleaseSelectProduct)),
       );
       return;
     }
@@ -80,7 +82,7 @@ class _AddMovementPageState extends ConsumerState<AddMovementPage> {
         ref.read(movementProvider.notifier).updateMovement(existing.id, updated);
 
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('Movement updated')),
+          SnackBar(content: Text(l10n.movementUpdated)),
         );
       } else {
         ref.read(movementProvider.notifier).addMovement(
@@ -91,7 +93,7 @@ class _AddMovementPageState extends ConsumerState<AddMovementPage> {
             );
 
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('Movement registered')),
+          SnackBar(content: Text(l10n.movementRegistered)),
         );
       }
       context.pop();
@@ -105,6 +107,7 @@ class _AddMovementPageState extends ConsumerState<AddMovementPage> {
   @override
   Widget build(BuildContext context) {
     final products = ref.watch(inventoryProvider);
+    final l10n = AppLocalizations.of(context)!;
     final selectedProduct = _selectedProductId != null
         ? ref
             .read(inventoryProvider.notifier)
@@ -113,7 +116,7 @@ class _AddMovementPageState extends ConsumerState<AddMovementPage> {
 
     return Scaffold(
       appBar: AppBar(
-        title: Text(_isEditing ? 'Edit Movement' : 'Add Movement'),
+        title: Text(_isEditing ? l10n.editMovement : l10n.addMovement),
       ),
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(16),
@@ -127,15 +130,15 @@ class _AddMovementPageState extends ConsumerState<AddMovementPage> {
                   child: ListTile(
                     title: Text(selectedProduct.name),
                     subtitle: Text(
-                      'Current stock: ${selectedProduct.quantity}',
+                      l10n.currentStock(selectedProduct.quantity),
                     ),
                   ),
                 )
               else
                 DropdownButtonFormField<String>(
                   initialValue: _selectedProductId,
-                  decoration: const InputDecoration(
-                    labelText: 'Product *',
+                  decoration: InputDecoration(
+                    labelText: l10n.productLabel,
                     border: OutlineInputBorder(),
                   ),
                   items: products
@@ -149,23 +152,23 @@ class _AddMovementPageState extends ConsumerState<AddMovementPage> {
                   },
                   validator: (value) {
                     if (value == null || value.isEmpty) {
-                      return 'Please select a product';
+                      return l10n.pleaseSelectProduct;
                     }
                     return null;
                   },
                 ),
               const SizedBox(height: 16),
               SegmentedButton<MovementType>(
-                segments: const [
+                segments: [
                   ButtonSegment(
                     value: MovementType.entry,
-                    label: Text('Entry'),
-                    icon: Icon(Icons.arrow_downward),
+                    label: Text(l10n.entry),
+                    icon: const Icon(Icons.arrow_downward),
                   ),
                   ButtonSegment(
                     value: MovementType.exit,
-                    label: Text('Exit'),
-                    icon: Icon(Icons.arrow_upward),
+                    label: Text(l10n.exit),
+                    icon: const Icon(Icons.arrow_upward),
                   ),
                 ],
                 selected: {_selectedType},
@@ -192,23 +195,23 @@ class _AddMovementPageState extends ConsumerState<AddMovementPage> {
               const SizedBox(height: 16),
               TextFormField(
                 controller: _quantityController,
-                decoration: const InputDecoration(
-                  labelText: 'Quantity *',
+                decoration: InputDecoration(
+                  labelText: l10n.quantityLabel,
                   border: OutlineInputBorder(),
                 ),
                 keyboardType: TextInputType.number,
                 validator: (value) {
                   if (value == null || value.trim().isEmpty) {
-                    return 'Required';
+                    return l10n.required;
                   }
                   final number = int.tryParse(value);
                   if (number == null || number <= 0) {
-                    return 'Must be a positive number';
+                    return l10n.mustBePositive;
                   }
                   if (_selectedType == MovementType.exit &&
                       selectedProduct != null &&
                       number > selectedProduct.quantity) {
-                    return 'Cannot exceed available stock (${selectedProduct.quantity})';
+                    return l10n.cannotExceedStock(selectedProduct.quantity);
                   }
                   return null;
                 },
@@ -216,13 +219,13 @@ class _AddMovementPageState extends ConsumerState<AddMovementPage> {
               const SizedBox(height: 16),
               TextFormField(
                 controller: _reasonController,
-                decoration: const InputDecoration(
-                  labelText: 'Reason *',
+                decoration: InputDecoration(
+                  labelText: l10n.reasonLabel,
                   border: OutlineInputBorder(),
                 ),
                 validator: (value) {
                   if (value == null || value.trim().isEmpty) {
-                    return 'Required';
+                    return l10n.required;
                   }
                   return null;
                 },
@@ -231,7 +234,7 @@ class _AddMovementPageState extends ConsumerState<AddMovementPage> {
               FilledButton.icon(
                 onPressed: _submit,
                 icon: const Icon(Icons.save),
-                label: Text(_isEditing ? 'Save Changes' : 'Register Movement'),
+                label: Text(_isEditing ? l10n.saveChanges : l10n.registerMovement),
               ),
             ],
           ),

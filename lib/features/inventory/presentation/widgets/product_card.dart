@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:inventory_app/core/utils/currency_formatter.dart';
 import 'package:inventory_app/features/inventory/data/models/product.dart';
 import 'package:inventory_app/features/inventory/presentation/widgets/stock_indicator.dart';
+import 'package:inventory_app/l10n/app_localizations.dart';
 
 class ProductCard extends StatelessWidget {
   final Product product;
@@ -18,6 +20,8 @@ class ProductCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
+
     return ListTile(
       leading: StockIndicator(
         quantity: product.quantity,
@@ -25,7 +29,7 @@ class ProductCard extends StatelessWidget {
       ),
       title: Text(product.name),
       subtitle: Text(
-        '${product.category ?? "Sin categoría"} · \$${product.price.toStringAsFixed(2)} · Qty: ${product.quantity}',
+        '${product.category ?? l10n.noCategory} · ${formatCurrency(context, product.price)} · ${l10n.quantityAbbreviation}: ${product.quantity}',
       ),
       trailing: (onDelete != null || onMovement != null)
           ? Row(

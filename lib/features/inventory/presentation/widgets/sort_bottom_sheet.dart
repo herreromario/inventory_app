@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:inventory_app/features/inventory/providers/filter_providers.dart';
+import 'package:inventory_app/l10n/app_localizations.dart';
 
 class SortBottomSheet extends ConsumerWidget {
   const SortBottomSheet({super.key});
@@ -15,21 +16,22 @@ class SortBottomSheet extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final filter = ref.watch(filterProvider);
+    final l10n = AppLocalizations.of(context)!;
 
     return SafeArea(
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
-          const Padding(
-            padding: EdgeInsets.all(16),
+          Padding(
+            padding: const EdgeInsets.all(16),
             child: Text(
-              'Sort by',
-              style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
+              l10n.sortBy,
+              style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
             ),
           ),
           for (final field in SortField.values)
             ListTile(
-              title: Text(_sortFieldLabel(field)),
+              title: Text(_sortFieldLabel(field, l10n)),
               trailing: filter.sortField == field
                   ? Icon(
                       filter.sortAscending
@@ -47,16 +49,16 @@ class SortBottomSheet extends ConsumerWidget {
     );
   }
 
-  String _sortFieldLabel(SortField field) {
+  String _sortFieldLabel(SortField field, AppLocalizations l10n) {
     switch (field) {
       case SortField.name:
-        return 'Name';
+        return l10n.sortName;
       case SortField.quantity:
-        return 'Quantity';
+        return l10n.sortQuantity;
       case SortField.price:
-        return 'Price';
+        return l10n.sortPrice;
       case SortField.createdAt:
-        return 'Date';
+        return l10n.sortDate;
     }
   }
 }

@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:hive_ce/hive.dart';
@@ -8,6 +9,7 @@ import 'package:inventory_app/features/inventory/data/models/product.dart';
 import 'package:inventory_app/features/inventory/data/repositories/product_repository.dart';
 import 'package:inventory_app/features/inventory/presentation/pages/add_product_page.dart';
 import 'package:inventory_app/features/inventory/providers/inventory_providers.dart';
+import 'package:inventory_app/l10n/app_localizations.dart';
 
 void main() {
   late Box box;
@@ -36,7 +38,16 @@ void main() {
       overrides: [
         productRepositoryProvider.overrideWithValue(repository),
       ],
-      child: const MaterialApp(home: AddProductPage()),
+      child: MaterialApp(
+        localizationsDelegates: const [
+          AppLocalizations.delegate,
+          GlobalMaterialLocalizations.delegate,
+          GlobalWidgetsLocalizations.delegate,
+          GlobalCupertinoLocalizations.delegate,
+        ],
+        supportedLocales: const [Locale('en')],
+        home: const AddProductPage(),
+      ),
     );
   }
 
@@ -49,7 +60,7 @@ void main() {
       expect(find.byType(AppBar), findsOneWidget);
       // 6 TextFormField: name, description, quantity, minStock, price, sku
       expect(find.byType(TextFormField), findsNWidgets(6));
-      // Category picker shows "Sin categoría" by default
+      // Category picker shows "Sin categoría" by default (localized)
       expect(find.text('Sin categoría'), findsOneWidget);
     });
 

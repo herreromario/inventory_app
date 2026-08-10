@@ -1,6 +1,6 @@
 # 005 · Localización (i18n)
 
-**Estado:** propuesta
+**Estado:** completado
 
 ## Qué hace
 
@@ -18,15 +18,15 @@ demostrar buenas prácticas en el portafolio profesional.
 
 ## Criterios de aceptación
 
-- [ ] La app detecta el idioma del dispositivo y muestra textos en ese idioma.
-- [ ] Todos los strings de UI están en archivos ARB (no hardcodeados).
-- [ ] `AppLocalizations.of(context)!.keyName` funciona en todas las páginas.
-- [ ] Los strings en español son correctos (no traducciones literales).
-- [ ] No hay strings hardcodeados restantes en archivos `.dart`.
-- [ ] El símbolo de moneda se muestra según el idioma: `$` en inglés, `€` en español.
-- [ ] La abreviatura de cantidad se muestra según el idioma: `Qty` en inglés, `Cant` en español.
-- [ ] `flutter analyze` pasa sin errores.
-- [ ] Todos los tests existentes siguen pasando.
+- [x] La app detecta el idioma del dispositivo y muestra textos en ese idioma.
+- [x] Todos los strings de UI están en archivos ARB (no hardcodeados).
+- [x] `AppLocalizations.of(context)!.keyName` funciona en todas las páginas.
+- [x] Los strings en español son correctos (no traducciones literales).
+- [x] No hay strings hardcodeados restantes en archivos `.dart`.
+- [x] El símbolo de moneda se muestra según el idioma: `$` en inglés, `€` en español.
+- [x] La abreviatura de cantidad se muestra según el idioma: `Qty` en inglés, `Cant` en español.
+- [x] `flutter analyze` pasa sin errores.
+- [x] Todos los tests existentes siguen pasando.
 
 ## Fuera de alcance
 

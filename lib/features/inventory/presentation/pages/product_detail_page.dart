@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:inventory_app/core/constants/app_constants.dart';
+import 'package:inventory_app/core/utils/currency_formatter.dart';
 import 'package:inventory_app/features/inventory/data/models/product.dart';
 import 'package:inventory_app/features/inventory/presentation/widgets/category_picker.dart';
 import 'package:inventory_app/features/inventory/presentation/widgets/date_group_helper.dart';
@@ -9,6 +10,7 @@ import 'package:inventory_app/features/inventory/presentation/widgets/movement_c
 import 'package:inventory_app/features/inventory/presentation/widgets/stock_indicator.dart';
 import 'package:inventory_app/features/inventory/providers/inventory_providers.dart';
 import 'package:inventory_app/features/inventory/providers/movement_providers.dart';
+import 'package:inventory_app/l10n/app_localizations.dart';
 import 'package:inventory_app/shared/widgets/confirm_dialog.dart';
 
 class ProductDetailPage extends ConsumerStatefulWidget {
@@ -81,6 +83,7 @@ class _ProductDetailPageState extends ConsumerState<ProductDetailPage> {
 
   void _save() {
     if (_formKey.currentState!.validate()) {
+      final l10n = AppLocalizations.of(context)!;
       final product = _getProduct();
       if (product == null) return;
 
@@ -104,7 +107,7 @@ class _ProductDetailPageState extends ConsumerState<ProductDetailPage> {
       setState(() => _isEditing = false);
 
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Product updated')),
+        SnackBar(content: Text(l10n.productUpdated)),
       );
     }
   }
@@ -113,10 +116,11 @@ class _ProductDetailPageState extends ConsumerState<ProductDetailPage> {
     final product = _getProduct();
     if (product == null) return;
 
+    final l10n = AppLocalizations.of(context)!;
     final confirmed = await ConfirmDialog.show(
       context: context,
-      title: 'Delete Product',
-      message: 'Are you sure you want to delete "${product.name}"?',
+      title: l10n.deleteProduct,
+      message: l10n.confirmDeleteProduct(product.name),
     );
 
     if (confirmed && mounted) {
@@ -128,17 +132,18 @@ class _ProductDetailPageState extends ConsumerState<ProductDetailPage> {
   @override
   Widget build(BuildContext context) {
     final product = _getProduct();
+    final l10n = AppLocalizations.of(context)!;
 
     if (product == null) {
       return Scaffold(
-        appBar: AppBar(title: const Text('Product Detail')),
-        body: const Center(child: Text('Product not found')),
+        appBar: AppBar(title: Text(l10n.productDetail)),
+        body: Center(child: Text(l10n.productNotFound)),
       );
     }
 
     return Scaffold(
       appBar: AppBar(
-        title: Text(_isEditing ? 'Edit Product' : 'Product Detail'),
+        title: Text(_isEditing ? l10n.editProduct : l10n.productDetail),
         actions: [
           if (!_isEditing)
             IconButton(
@@ -167,6 +172,7 @@ class _ProductDetailPageState extends ConsumerState<ProductDetailPage> {
   }
 
   Widget _buildDetail(Product product) {
+    final l10n = AppLocalizations.of(context)!;
     return SingleChildScrollView(
       padding: const EdgeInsets.all(16),
       child: Column(
@@ -188,21 +194,21 @@ class _ProductDetailPageState extends ConsumerState<ProductDetailPage> {
             ],
           ),
           const SizedBox(height: 24),
-          _buildDetailRow('Category', product.category ?? 'Sin categoría'),
-          _buildDetailRow('Price', '\$${product.price.toStringAsFixed(2)}'),
-          _buildDetailRow('Quantity', product.quantity.toString()),
-          _buildDetailRow('Min Stock', product.minStock.toString()),
+          _buildDetailRow(l10n.categoryLabel, product.category ?? l10n.noCategory),
+          _buildDetailRow(l10n.priceLabel, formatCurrency(context, product.price)),
+          _buildDetailRow(l10n.quantityLabel, product.quantity.toString()),
+          _buildDetailRow(l10n.minStockLabel, product.minStock.toString()),
           if (product.sku != null && product.sku!.isNotEmpty)
-            _buildDetailRow('SKU', product.sku!),
+            _buildDetailRow(l10n.skuLabel, product.sku!),
           if (product.description != null && product.description!.isNotEmpty)
-            _buildDetailRow('Description', product.description!),
+            _buildDetailRow(l10n.descriptionLabel, product.description!),
           const SizedBox(height: 16),
           Text(
-            'Created: ${product.createdAt.toLocal().toString().split('.').first}',
+            l10n.createdDate(product.createdAt.toLocal().toString().split('.').first),
             style: Theme.of(context).textTheme.bodySmall,
           ),
           Text(
-            'Updated: ${product.updatedAt.toLocal().toString().split('.').first}',
+            l10n.updatedDate(product.updatedAt.toLocal().toString().split('.').first),
             style: Theme.of(context).textTheme.bodySmall,
           ),
           const SizedBox(height: 16),
@@ -233,26 +239,27 @@ class _ProductDetailPageState extends ConsumerState<ProductDetailPage> {
 
   Widget _buildMovementSection(Product product) {
     final movements = ref.watch(movementProvider);
+    final l10n = AppLocalizations.of(context)!;
     final productMovements = movements
         .where((m) => m.productId == product.id)
         .toList()
       ..sort((a, b) => b.date.compareTo(a.date));
 
-    final groups = groupMovementsByDate(productMovements);
+    final groups = groupMovementsByDate(productMovements, l10n);
 
     return Theme(
       data: Theme.of(context).copyWith(dividerColor: Colors.transparent),
       child: ExpansionTile(
         tilePadding: EdgeInsets.zero,
         title: Text(
-          'Movement History (${productMovements.length})',
+          l10n.movementHistoryCount(productMovements.length),
           style: const TextStyle(fontWeight: FontWeight.bold),
         ),
         children: [
           if (productMovements.isEmpty)
-            const Padding(
-              padding: EdgeInsets.all(16),
-              child: Text('No movements yet'),
+            Padding(
+              padding: const EdgeInsets.all(16),
+              child: Text(l10n.noMovementsYet),
             )
           else
             ...groups.map((group) => Column(
@@ -280,9 +287,8 @@ class _ProductDetailPageState extends ConsumerState<ProductDetailPage> {
                             onDelete: () async {
                               final confirmed = await ConfirmDialog.show(
                                 context: context,
-                                title: 'Delete Movement',
-                                message:
-                                    'Are you sure you want to delete this movement?',
+                                title: l10n.deleteMovement,
+                                message: l10n.confirmDeleteMovement,
                               );
                               if (confirmed && mounted) {
                                 ref
@@ -300,6 +306,7 @@ class _ProductDetailPageState extends ConsumerState<ProductDetailPage> {
   }
 
   Widget _buildEditForm() {
+    final l10n = AppLocalizations.of(context)!;
     return SingleChildScrollView(
       padding: const EdgeInsets.all(16),
       child: Form(
@@ -309,13 +316,13 @@ class _ProductDetailPageState extends ConsumerState<ProductDetailPage> {
           children: [
             TextFormField(
               controller: _nameController,
-              decoration: const InputDecoration(
-                labelText: 'Product Name *',
+              decoration: InputDecoration(
+                labelText: l10n.productNameLabel,
                 border: OutlineInputBorder(),
               ),
               validator: (value) {
                 if (value == null || value.trim().isEmpty) {
-                  return 'Please enter a product name';
+                  return l10n.productNameRequired;
                 }
                 return null;
               },
@@ -323,9 +330,9 @@ class _ProductDetailPageState extends ConsumerState<ProductDetailPage> {
             const SizedBox(height: 16),
             TextFormField(
               controller: _descriptionController,
-              decoration: const InputDecoration(
-                labelText: 'Description',
-                border: OutlineInputBorder(),
+              decoration: InputDecoration(
+                labelText: l10n.descriptionLabel,
+                border: const OutlineInputBorder(),
               ),
               maxLines: 3,
             ),
@@ -343,18 +350,18 @@ class _ProductDetailPageState extends ConsumerState<ProductDetailPage> {
                 Expanded(
                   child: TextFormField(
                     controller: _quantityController,
-                    decoration: const InputDecoration(
-                      labelText: 'Quantity *',
+                    decoration: InputDecoration(
+                      labelText: l10n.quantityLabel,
                       border: OutlineInputBorder(),
                     ),
                     keyboardType: TextInputType.number,
                     validator: (value) {
                       if (value == null || value.trim().isEmpty) {
-                        return 'Required';
+                        return l10n.required;
                       }
                       final number = int.tryParse(value);
                       if (number == null || number < 0) {
-                        return 'Invalid';
+                        return l10n.invalidNumber;
                       }
                       return null;
                     },
@@ -364,18 +371,18 @@ class _ProductDetailPageState extends ConsumerState<ProductDetailPage> {
                 Expanded(
                   child: TextFormField(
                     controller: _minStockController,
-                    decoration: const InputDecoration(
-                      labelText: 'Min Stock *',
-                      border: OutlineInputBorder(),
+                    decoration: InputDecoration(
+                      labelText: l10n.minStockLabel,
+                      border: const OutlineInputBorder(),
                     ),
                     keyboardType: TextInputType.number,
                     validator: (value) {
                       if (value == null || value.trim().isEmpty) {
-                        return 'Required';
+                        return l10n.required;
                       }
                       final number = int.tryParse(value);
                       if (number == null || number < 0) {
-                        return 'Invalid';
+                        return l10n.invalidNumber;
                       }
                       return null;
                     },
@@ -390,19 +397,19 @@ class _ProductDetailPageState extends ConsumerState<ProductDetailPage> {
                 Expanded(
                   child: TextFormField(
                     controller: _priceController,
-                    decoration: const InputDecoration(
-                      labelText: 'Price *',
-                      border: OutlineInputBorder(),
-                      prefixText: '\$ ',
+                    decoration: InputDecoration(
+                      labelText: l10n.priceLabel,
+                      border: const OutlineInputBorder(),
+                      prefixText: Localizations.localeOf(context).languageCode == 'es' ? '€ ' : '\$ ',
                     ),
                     keyboardType: TextInputType.number,
                     validator: (value) {
                       if (value == null || value.trim().isEmpty) {
-                        return 'Required';
+                        return l10n.required;
                       }
                       final number = double.tryParse(value);
                       if (number == null || number < 0) {
-                        return 'Invalid';
+                        return l10n.invalidNumber;
                       }
                       return null;
                     },
@@ -412,9 +419,9 @@ class _ProductDetailPageState extends ConsumerState<ProductDetailPage> {
                 Expanded(
                   child: TextFormField(
                     controller: _skuController,
-                    decoration: const InputDecoration(
-                      labelText: 'SKU',
-                      border: OutlineInputBorder(),
+                    decoration: InputDecoration(
+                      labelText: l10n.skuLabel,
+                      border: const OutlineInputBorder(),
                     ),
                   ),
                 ),
@@ -424,7 +431,7 @@ class _ProductDetailPageState extends ConsumerState<ProductDetailPage> {
             FilledButton.icon(
               onPressed: _save,
               icon: const Icon(Icons.save),
-              label: const Text('Save Changes'),
+              label: Text(l10n.saveChanges),
             ),
           ],
         ),

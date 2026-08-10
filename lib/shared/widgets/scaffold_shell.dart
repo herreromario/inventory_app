@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:inventory_app/l10n/app_localizations.dart';
 
 class ScaffoldShell extends StatelessWidget {
   final Widget child;
@@ -36,21 +37,21 @@ class ScaffoldShell extends StatelessWidget {
       bottomNavigationBar: NavigationBar(
         selectedIndex: _calculateSelectedIndex(context), // Tab activo según URL
         onDestinationSelected: (index) => _onItemTapped(index, context),
-        destinations: const [
+        destinations: [
           NavigationDestination(
-            icon: Icon(Icons.inventory_2_outlined),
-            selectedIcon: Icon(Icons.inventory_2),
-            label: 'Inventory',
+            icon: const Icon(Icons.inventory_2_outlined),
+            selectedIcon: const Icon(Icons.inventory_2),
+            label: AppLocalizations.of(context)!.navInventory,
           ),
           NavigationDestination(
-            icon: Icon(Icons.swap_horiz_outlined),
-            selectedIcon: Icon(Icons.swap_horiz),
-            label: 'Movements',
+            icon: const Icon(Icons.swap_horiz_outlined),
+            selectedIcon: const Icon(Icons.swap_horiz),
+            label: AppLocalizations.of(context)!.navMovements,
           ),
           NavigationDestination(
-            icon: Icon(Icons.bar_chart_outlined),
-            selectedIcon: Icon(Icons.bar_chart),
-            label: 'Stats',
+            icon: const Icon(Icons.bar_chart_outlined),
+            selectedIcon: const Icon(Icons.bar_chart),
+            label: AppLocalizations.of(context)!.navStats,
           ),
         ],
       ),

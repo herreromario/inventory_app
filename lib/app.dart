@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:go_router/go_router.dart';
 import 'package:inventory_app/core/constants/app_constants.dart';
 import 'package:inventory_app/core/theme/app_theme.dart';
@@ -12,6 +13,7 @@ import 'package:inventory_app/features/inventory/presentation/pages/movement_his
 import 'package:inventory_app/features/inventory/presentation/pages/product_detail_page.dart';
 import 'package:inventory_app/features/inventory/presentation/pages/stats_page.dart';
 import 'package:inventory_app/features/inventory/presentation/pages/category_value_page.dart';
+import 'package:inventory_app/l10n/app_localizations.dart';
 import 'package:inventory_app/shared/widgets/scaffold_shell.dart';
 
 final GoRouter _router = GoRouter(
@@ -92,6 +94,24 @@ class InventoryApp extends StatelessWidget {
       title: 'Inventory App',
       theme: AppTheme.light,
       routerConfig: _router,
+      localizationsDelegates: const [
+        AppLocalizations.delegate,
+        GlobalMaterialLocalizations.delegate,
+        GlobalWidgetsLocalizations.delegate,
+        GlobalCupertinoLocalizations.delegate,
+      ],
+      supportedLocales: const [
+        Locale('en'),
+        Locale('es'),
+      ],
+      localeResolutionCallback: (locale, supportedLocales) {
+        for (final supportedLocale in supportedLocales) {
+          if (supportedLocale.languageCode == locale?.languageCode) {
+            return supportedLocale;
+          }
+        }
+        return supportedLocales.first;
+      },
     );
   }
 }

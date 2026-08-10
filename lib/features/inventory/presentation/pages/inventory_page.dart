@@ -6,6 +6,7 @@ import 'package:inventory_app/features/inventory/presentation/widgets/product_ca
 import 'package:inventory_app/features/inventory/presentation/widgets/sort_bottom_sheet.dart';
 import 'package:inventory_app/features/inventory/providers/filter_providers.dart';
 import 'package:inventory_app/features/inventory/providers/inventory_providers.dart';
+import 'package:inventory_app/l10n/app_localizations.dart';
 import 'package:inventory_app/shared/widgets/confirm_dialog.dart';
 import 'package:inventory_app/shared/widgets/empty_state.dart';
 
@@ -18,8 +19,10 @@ class InventoryPage extends ConsumerWidget {
     final filter = ref.watch(filterProvider);
     final hasProducts = ref.watch(inventoryProvider).isNotEmpty;
 
+    final l10n = AppLocalizations.of(context)!;
+
     return Scaffold(
-      appBar: AppBar(title: const Text('Inventory')),
+      appBar: AppBar(title: Text(l10n.navInventory)),
       floatingActionButton: FloatingActionButton(
         onPressed: () => context.push(AppRoutes.addProduct),
         child: const Icon(Icons.add),
@@ -31,7 +34,7 @@ class InventoryPage extends ConsumerWidget {
                   padding: const EdgeInsets.fromLTRB(16, 8, 16, 0),
                   child: TextField(
                     decoration: InputDecoration(
-                      hintText: 'Search products...',
+                      hintText: l10n.searchProducts,
                       prefixIcon: const Icon(Icons.search),
                       suffixIcon: filter.query.isNotEmpty
                           ? IconButton(
@@ -68,7 +71,7 @@ class InventoryPage extends ConsumerWidget {
                             isLabelVisible: filter.activeFilterCount > 0,
                             child: const Icon(Icons.tune, size: 18),
                           ),
-                          label: const Text('Filters'),
+                          label: Text(l10n.filters),
                         ),
                       ),
                       const SizedBox(width: 8),
@@ -76,7 +79,7 @@ class InventoryPage extends ConsumerWidget {
                         child: OutlinedButton.icon(
                           onPressed: () => SortBottomSheet.show(context),
                           icon: const Icon(Icons.sort, size: 18),
-                          label: const Text('Sort'),
+                          label: Text(l10n.sort),
                         ),
                       ),
                     ],
@@ -85,7 +88,7 @@ class InventoryPage extends ConsumerWidget {
                 const Divider(height: 1),
                 Expanded(
                   child: products.isEmpty
-                      ? const EmptyState(message: 'No matching products')
+                      ? EmptyState(message: l10n.noMatchingProducts)
                       : ListView.builder(
                           itemCount: products.length,
                           itemBuilder: (context, index) {
@@ -95,9 +98,8 @@ class InventoryPage extends ConsumerWidget {
                               onDelete: () async {
                                 final confirmed = await ConfirmDialog.show(
                                   context: context,
-                                  title: 'Delete Product',
-                                  message:
-                                      'Are you sure you want to delete "${product.name}"?',
+                                  title: l10n.deleteProduct,
+                                  message: l10n.confirmDeleteProduct(product.name),
                                 );
                                 if (confirmed && context.mounted) {
                                   ref
@@ -121,7 +123,7 @@ class InventoryPage extends ConsumerWidget {
                 ),
               ],
             )
-          : const EmptyState(message: 'No products yet'),
+          : EmptyState(message: l10n.noProductsYet),
     );
   }
 }

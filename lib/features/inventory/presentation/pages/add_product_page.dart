@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:inventory_app/features/inventory/presentation/widgets/category_picker.dart';
 import 'package:inventory_app/features/inventory/providers/inventory_providers.dart';
+import 'package:inventory_app/l10n/app_localizations.dart';
 
 class AddProductPage extends ConsumerStatefulWidget {
   const AddProductPage({super.key});
@@ -34,6 +35,7 @@ class _AddProductPageState extends ConsumerState<AddProductPage> {
 
   void _submit() {
     if (_formKey.currentState!.validate()) {
+      final l10n = AppLocalizations.of(context)!;
       ref.read(inventoryProvider.notifier).addProduct(
             name: _nameController.text.trim(),
             description: _descriptionController.text.trim().isEmpty
@@ -49,7 +51,7 @@ class _AddProductPageState extends ConsumerState<AddProductPage> {
           );
 
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Product added successfully')),
+        SnackBar(content: Text(l10n.productAddedSuccessfully)),
       );
 
       context.pop();
@@ -58,8 +60,10 @@ class _AddProductPageState extends ConsumerState<AddProductPage> {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
+
     return Scaffold(
-      appBar: AppBar(title: const Text('Add Product')),
+      appBar: AppBar(title: Text(l10n.addProduct)),
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(16),
         child: Form(
@@ -69,13 +73,13 @@ class _AddProductPageState extends ConsumerState<AddProductPage> {
             children: [
               TextFormField(
                 controller: _nameController,
-                decoration: const InputDecoration(
-                  labelText: 'Product Name *',
+                decoration: InputDecoration(
+                  labelText: l10n.productNameLabel,
                   border: OutlineInputBorder(),
                 ),
                 validator: (value) {
                   if (value == null || value.trim().isEmpty) {
-                    return 'Please enter a product name';
+                    return l10n.productNameRequired;
                   }
                   return null;
                 },
@@ -83,8 +87,8 @@ class _AddProductPageState extends ConsumerState<AddProductPage> {
               const SizedBox(height: 16),
               TextFormField(
                 controller: _descriptionController,
-                decoration: const InputDecoration(
-                  labelText: 'Description',
+                decoration: InputDecoration(
+                  labelText: l10n.descriptionLabel,
                   border: OutlineInputBorder(),
                 ),
                 maxLines: 3,
@@ -103,8 +107,8 @@ class _AddProductPageState extends ConsumerState<AddProductPage> {
                   Expanded(
                     child: TextFormField(
                       controller: _quantityController,
-                      decoration: const InputDecoration(
-                        labelText: 'Quantity *',
+                      decoration: InputDecoration(
+                        labelText: l10n.quantityLabel,
                         border: OutlineInputBorder(),
                       ),
                       keyboardType: TextInputType.number,
@@ -124,18 +128,18 @@ class _AddProductPageState extends ConsumerState<AddProductPage> {
                   Expanded(
                     child: TextFormField(
                       controller: _minStockController,
-                      decoration: const InputDecoration(
-                        labelText: 'Min Stock *',
+                      decoration: InputDecoration(
+                        labelText: l10n.minStockLabel,
                         border: OutlineInputBorder(),
                       ),
                       keyboardType: TextInputType.number,
                       validator: (value) {
                         if (value == null || value.trim().isEmpty) {
-                          return 'Required';
+                          return l10n.required;
                         }
                         final number = int.tryParse(value);
                         if (number == null || number < 0) {
-                          return 'Invalid number';
+                          return l10n.invalidNumber;
                         }
                         return null;
                       },
@@ -150,19 +154,19 @@ class _AddProductPageState extends ConsumerState<AddProductPage> {
                   Expanded(
                     child: TextFormField(
                       controller: _priceController,
-                      decoration: const InputDecoration(
-                        labelText: 'Price *',
+                      decoration: InputDecoration(
+                        labelText: l10n.priceLabel,
                         border: OutlineInputBorder(),
-                        prefixText: '\$ ',
+                        prefixText: Localizations.localeOf(context).languageCode == 'es' ? '€ ' : '\$ ',
                       ),
                       keyboardType: TextInputType.number,
                       validator: (value) {
                         if (value == null || value.trim().isEmpty) {
-                          return 'Required';
+                          return l10n.required;
                         }
                         final number = double.tryParse(value);
                         if (number == null || number < 0) {
-                          return 'Invalid price';
+                          return l10n.invalidPrice;
                         }
                         return null;
                       },
@@ -172,8 +176,8 @@ class _AddProductPageState extends ConsumerState<AddProductPage> {
                   Expanded(
                     child: TextFormField(
                       controller: _skuController,
-                      decoration: const InputDecoration(
-                        labelText: 'SKU',
+                      decoration: InputDecoration(
+                        labelText: l10n.skuLabel,
                         border: OutlineInputBorder(),
                       ),
                     ),
@@ -184,7 +188,7 @@ class _AddProductPageState extends ConsumerState<AddProductPage> {
               FilledButton.icon(
                 onPressed: _submit,
                 icon: const Icon(Icons.add),
-                label: const Text('Add Product'),
+                label: Text(l10n.addProduct),
               ),
             ],
           ),

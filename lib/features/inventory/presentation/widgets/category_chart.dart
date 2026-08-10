@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:inventory_app/core/theme/app_colors.dart';
+import 'package:inventory_app/core/utils/currency_formatter.dart';
+import 'package:inventory_app/l10n/app_localizations.dart';
 
 class CategoryChart extends StatelessWidget {
   final Map<String, double> data;
@@ -9,11 +11,12 @@ class CategoryChart extends StatelessWidget {
     required this.data,
   });
 
-  String _formatCurrency(double value) {
+  String _formatCurrency(BuildContext context, double value) {
     if (value >= 1000) {
-      return '\$${(value / 1000).toStringAsFixed(1)}k';
+      final symbol = formatCurrency(context, value / 1000).replaceAll(RegExp(r'[,.\d]'), '');
+      return '$symbol${(value / 1000).toStringAsFixed(1)}k';
     }
-    return '\$${value.toStringAsFixed(0)}';
+    return formatCurrency(context, value);
   }
 
   @override
@@ -22,6 +25,7 @@ class CategoryChart extends StatelessWidget {
       return const SizedBox.shrink();
     }
 
+    final l10n = AppLocalizations.of(context)!;
     final sorted = data.entries.toList()
       ..sort((a, b) => b.value.compareTo(a.value));
     final maxValue = sorted.first.value;
@@ -37,7 +41,7 @@ class CategoryChart extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
-              'Categorías por valor',
+              l10n.categoriesByValue,
               style: Theme.of(context).textTheme.titleMedium?.copyWith(
                     fontWeight: FontWeight.bold,
                   ),
@@ -83,7 +87,7 @@ class CategoryChart extends StatelessWidget {
                     SizedBox(
                       width: 50,
                       child: Text(
-                        _formatCurrency(entry.value),
+                        _formatCurrency(context, entry.value),
                         style: const TextStyle(
                           fontWeight: FontWeight.bold,
                           fontSize: 13,

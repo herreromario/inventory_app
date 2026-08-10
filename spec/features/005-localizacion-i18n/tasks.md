@@ -1,23 +1,23 @@
 # 005 · Localización (i18n) — Tareas
 
-- [ ] Agregar dependencias `flutter_localizations` e `intl` en `pubspec.yaml`
-- [ ] Agregar `generate: true` en `pubspec.yaml`
-- [ ] Crear archivo `l10n.yaml` en la raíz del proyecto
-- [ ] Crear `lib/l10n/app_en.arb` con todos los strings en inglés
-- [ ] Crear `lib/l10n/app_es.arb` con todos los strings en español
-- [ ] Ejecutar `flutter gen-l10n` para generar archivos de localización
-- [ ] Configurar `app.dart` con localizationsDelegates y supportedLocales
-- [ ] Reemplazar strings en `scaffold_shell.dart`
-- [ ] Reemplazar strings en `empty_state.dart` y `confirm_dialog.dart`
-- [ ] Reemplazar strings en páginas: inventory, add_product, product_detail
-- [ ] Reemplazar strings en páginas: add_movement, movement_history
-- [ ] Reemplazar strings en páginas: stats, category, category_value
-- [ ] Reemplazar strings en widgets: product_card, movement_card, category_picker
-- [ ] Reemplazar strings en widgets: category_chart, recent_movements, stats_empty_view
-- [ ] Reemplazar strings en `date_group_helper.dart` y `stats_providers.dart`
-- [ ] Reemplazar símbolo de moneda `$` por `currencySymbol` en páginas (add_product, product_detail, stats, category_value)
-- [ ] Verificar que `category_chart.dart` usa el símbolo localizado en los ejes
-- [ ] Ejecutar `flutter analyze` sin errores
-- [ ] Ejecutar `flutter test` sin errores
-- [ ] Validar contra los criterios de aceptación de `spec.md`
-- [ ] Mover la feature a "Hecho" en `../../constitution/roadmap.md`
+- [x] Agregar dependencias `flutter_localizations` e `intl` en `pubspec.yaml`
+- [x] Agregar `generate: true` en `pubspec.yaml`
+- [x] Crear archivo `l10n.yaml` en la raíz del proyecto
+- [x] Crear `lib/l10n/app_en.arb` con todos los strings en inglés
+- [x] Crear `lib/l10n/app_es.arb` con todos los strings en español
+- [x] Ejecutar `flutter gen-l10n` para generar archivos de localización
+- [x] Configurar `app.dart` con localizationsDelegates y supportedLocales
+- [x] Reemplazar strings en `scaffold_shell.dart`
+- [x] Reemplazar strings en `empty_state.dart` y `confirm_dialog.dart`
+- [x] Reemplazar strings en páginas: inventory, add_product, product_detail
+- [x] Reemplazar strings en páginas: add_movement, movement_history
+- [x] Reemplazar strings en páginas: stats, category, category_value
+- [x] Reemplazar strings en widgets: product_card, movement_card, category_picker
+- [x] Reemplazar strings en widgets: category_chart, recent_movements, stats_empty_view
+- [x] Reemplazar strings en `date_group_helper.dart` y `stats_providers.dart`
+- [x] Reemplazar símbolo de moneda `$` por `currencySymbol` en páginas (add_product, product_detail, stats, category_value)
+- [x] Verificar que `category_chart.dart` usa el símbolo localizado en los ejes
+- [x] Ejecutar `flutter analyze` sin errores
+- [x] Ejecutar `flutter test` sin errores
+- [x] Validar contra los criterios de aceptación de `spec.md`
+- [x] Mover la feature a "Hecho" en `../../constitution/roadmap.md`

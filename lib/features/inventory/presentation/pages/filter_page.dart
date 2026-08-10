@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:inventory_app/core/constants/app_constants.dart';
 import 'package:inventory_app/features/inventory/providers/filter_providers.dart';
+import 'package:inventory_app/l10n/app_localizations.dart';
 
 class FilterPage extends ConsumerStatefulWidget {
   const FilterPage({super.key});
@@ -22,16 +23,16 @@ class _FilterPageState extends ConsumerState<FilterPage> {
     _draft = notifier.draft!.copy();
   }
 
-  String _stockStatusLabel(StockStatus status) {
+  String _stockStatusLabel(StockStatus status, AppLocalizations l10n) {
     switch (status) {
       case StockStatus.all:
-        return 'All';
+        return l10n.all;
       case StockStatus.low:
-        return 'Low';
+        return l10n.low;
       case StockStatus.normal:
-        return 'Normal';
+        return l10n.normal;
       case StockStatus.high:
-        return 'High';
+        return l10n.high;
     }
   }
 
@@ -40,10 +41,11 @@ class _FilterPageState extends ConsumerState<FilterPage> {
     final currentFilter = ref.watch(filterProvider);
     final hasChanges = _draft.hasChanges(currentFilter);
     final activeCount = _draft.activeCount;
+    final l10n = AppLocalizations.of(context)!;
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Filters'),
+        title: Text(l10n.filters),
         actions: [
           if (activeCount > 0)
             TextButton(
@@ -52,7 +54,7 @@ class _FilterPageState extends ConsumerState<FilterPage> {
                   _draft = FilterDraft();
                 });
               },
-              child: const Text('Clear'),
+              child: Text(l10n.clear),
             ),
         ],
       ),
@@ -62,9 +64,9 @@ class _FilterPageState extends ConsumerState<FilterPage> {
             child: ListView(
               children: [
                 ListTile(
-                  title: const Text('Category'),
+                  title: Text(l10n.categoryLabel),
                   subtitle: Text(
-                    _draft.selectedCategory ?? 'All categories',
+                    _draft.selectedCategory ?? l10n.allCategories,
                   ),
                   trailing: const Icon(Icons.chevron_right),
                   onTap: () async {
@@ -81,8 +83,8 @@ class _FilterPageState extends ConsumerState<FilterPage> {
                 ),
                 const Divider(height: 1),
                 ListTile(
-                  title: const Text('Stock Status'),
-                  subtitle: Text(_stockStatusLabel(_draft.stockStatus)),
+                  title: Text(l10n.stockStatus),
+                  subtitle: Text(_stockStatusLabel(_draft.stockStatus, l10n)),
                   trailing: const Icon(Icons.chevron_right),
                   onTap: () {
                     _showStockStatusPicker();
@@ -98,7 +100,7 @@ class _FilterPageState extends ConsumerState<FilterPage> {
                 width: double.infinity,
                 child: FilledButton(
                   onPressed: hasChanges ? _applyFilters : null,
-                  child: Text(_buttonLabel(hasChanges, activeCount)),
+                  child: Text(_buttonLabel(hasChanges, activeCount, l10n)),
                 ),
               ),
             ),
@@ -108,13 +110,14 @@ class _FilterPageState extends ConsumerState<FilterPage> {
     );
   }
 
-  String _buttonLabel(bool hasChanges, int activeCount) {
-    if (!hasChanges) return 'Show results';
-    if (activeCount > 0) return 'Show results ($activeCount)';
-    return 'Clear filters';
+  String _buttonLabel(bool hasChanges, int activeCount, AppLocalizations l10n) {
+    if (!hasChanges) return l10n.showResults;
+    if (activeCount > 0) return l10n.showResultsCount(activeCount);
+    return l10n.clearFilters;
   }
 
   void _showStockStatusPicker() {
+    final l10n = AppLocalizations.of(context)!;
     showModalBottomSheet(
       context: context,
       builder: (context) {
@@ -122,16 +125,16 @@ class _FilterPageState extends ConsumerState<FilterPage> {
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
-              const Padding(
-                padding: EdgeInsets.all(16),
+              Padding(
+                padding: const EdgeInsets.all(16),
                 child: Text(
-                  'Stock Status',
-                  style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
+                  l10n.stockStatus,
+                  style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
                 ),
               ),
               for (final status in StockStatus.values)
                 ListTile(
-                  title: Text(_stockStatusLabel(status)),
+                  title: Text(_stockStatusLabel(status, l10n)),
                   trailing: _draft.stockStatus == status
                       ? const Icon(Icons.check)
                       : null,

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:inventory_app/core/constants/app_constants.dart';
+import 'package:inventory_app/l10n/app_localizations.dart';
 
 class CategoryPicker extends StatelessWidget {
   final String? selectedCategory;
@@ -15,6 +16,7 @@ class CategoryPicker extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final hasCategory = selectedCategory?.isNotEmpty == true;
+    final l10n = AppLocalizations.of(context)!;
 
     return InkWell(
       onTap: () async {
@@ -23,7 +25,7 @@ class CategoryPicker extends StatelessWidget {
       },
       child: InputDecorator(
         decoration: InputDecoration(
-          labelText: 'Category',
+          labelText: l10n.categoryLabel,
           border: const OutlineInputBorder(),
           suffixIcon: Row(
             mainAxisSize: MainAxisSize.min,
@@ -38,7 +40,7 @@ class CategoryPicker extends StatelessWidget {
           ),
         ),
         child: Text(
-          hasCategory ? selectedCategory! : 'Sin categoría',
+          hasCategory ? selectedCategory! : l10n.noCategory,
           style: TextStyle(
             color: hasCategory ? null : Theme.of(context).hintColor,
           ),

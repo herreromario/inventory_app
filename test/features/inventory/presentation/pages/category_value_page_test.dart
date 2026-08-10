@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:hive_ce/hive.dart';
@@ -9,6 +10,7 @@ import 'package:inventory_app/features/inventory/data/repositories/product_repos
 import 'package:inventory_app/features/inventory/presentation/pages/category_value_page.dart';
 import 'package:inventory_app/features/inventory/providers/inventory_providers.dart';
 import 'package:inventory_app/features/inventory/providers/movement_providers.dart';
+import 'package:inventory_app/l10n/app_localizations.dart';
 
 void main() {
   late Box box;
@@ -47,7 +49,16 @@ void main() {
           MovementRepository(box),
         ),
       ],
-      child: const MaterialApp(home: CategoryValuePage()),
+      child: MaterialApp(
+        localizationsDelegates: const [
+          AppLocalizations.delegate,
+          GlobalMaterialLocalizations.delegate,
+          GlobalWidgetsLocalizations.delegate,
+          GlobalCupertinoLocalizations.delegate,
+        ],
+        supportedLocales: const [Locale('en')],
+        home: const CategoryValuePage(),
+      ),
     );
   }
 
@@ -57,8 +68,8 @@ void main() {
       await tester.pump();
       await tester.pump();
 
-      expect(find.text('Valor por categoría'), findsOneWidget);
-      expect(find.text('No hay datos disponibles'), findsOneWidget);
+      expect(find.text('Value by Category'), findsOneWidget);
+      expect(find.text('No data available'), findsOneWidget);
     });
 
     testWidgets('shows total value when products exist', (tester) async {
@@ -78,7 +89,7 @@ void main() {
       await tester.pump();
       await tester.pump();
 
-      expect(find.text('Total del inventario'), findsOneWidget);
+      expect(find.text('Total Inventory'), findsOneWidget);
       expect(find.textContaining('\$'), findsWidgets);
     });
   });

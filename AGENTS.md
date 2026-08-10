@@ -94,13 +94,24 @@ prácticas de arquitectura Flutter a futuros clientes.
 - No modificar archivos `.g.dart` generados — siempre usar `build_runner`
 - No usar `dynamic` o `var` cuando el tipo no sea obvio — ser explícito
 - No crear widgets gigantes (>200 líneas) — extraer componentes
-- No hardcodear strings de UI — preparar para futura localización
+- No hardcodear strings de UI — usar `AppLocalizations` (ver sección Localización)
 - No saltar la validación de null checks en datos de Hive
 - No hacer commits sin que `flutter analyze` pase sin errores
 - No usar `setState` en widgets que deberían usar Riverpod
 - No usar imports relativos — usar `package:` imports
 - No omitir `required` en named parameters obligatorios
 - No crear providers globales sin dependencias claras
+
+## Localización (i18n)
+
+- Todos los strings de UI deben usar `AppLocalizations.of(context)!.keyName`
+- Crear keys en `lib/l10n/app_en.arb` (inglés, idioma principal) y `lib/l10n/app_es.arb` (español)
+- Nunca hardcodear strings de UI en archivos `.dart`
+- Moneda: `$` (inglés) / `€` (español) — usar key `currencySymbol`
+- Cantidad: `Qty` (inglés) / `Cant` (español) — usar key `quantityAbbreviation`
+- Strings con parámetros: usar sintaxis de `intl` (`{variable}`)
+- Ejecutar `flutter gen-l10n` tras modificar archivos ARB
+- Actualizar ambos ARB (EN y ES) cuando se agregue una nueva key
 
 ## Flujo de trabajo
 

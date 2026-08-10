@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:hive_ce/hive.dart';
@@ -10,6 +11,7 @@ import 'package:inventory_app/features/inventory/presentation/pages/stats_page.d
 import 'package:inventory_app/features/inventory/presentation/widgets/stats_empty_view.dart';
 import 'package:inventory_app/features/inventory/providers/inventory_providers.dart';
 import 'package:inventory_app/features/inventory/providers/movement_providers.dart';
+import 'package:inventory_app/l10n/app_localizations.dart';
 
 void main() {
   late Box box;
@@ -48,7 +50,16 @@ void main() {
           MovementRepository(box),
         ),
       ],
-      child: const MaterialApp(home: StatsPage()),
+      child: MaterialApp(
+        localizationsDelegates: const [
+          AppLocalizations.delegate,
+          GlobalMaterialLocalizations.delegate,
+          GlobalWidgetsLocalizations.delegate,
+          GlobalCupertinoLocalizations.delegate,
+        ],
+        supportedLocales: const [Locale('en')],
+        home: const StatsPage(),
+      ),
     );
   }
 
@@ -87,8 +98,8 @@ void main() {
       await tester.pump();
       await tester.pump();
 
-      expect(find.text('Total productos'), findsOneWidget);
-      expect(find.text('Valor total'), findsOneWidget);
+      expect(find.text('Total products'), findsOneWidget);
+      expect(find.text('Total value'), findsOneWidget);
     });
   });
 }

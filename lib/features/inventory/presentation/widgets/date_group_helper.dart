@@ -1,4 +1,5 @@
 import 'package:inventory_app/features/inventory/data/models/stock_movement.dart';
+import 'package:inventory_app/l10n/app_localizations.dart';
 
 class DateGroup {
   final String label;
@@ -7,7 +8,8 @@ class DateGroup {
   DateGroup({required this.label, required this.movements});
 }
 
-List<DateGroup> groupMovementsByDate(List<StockMovement> movements) {
+List<DateGroup> groupMovementsByDate(
+    List<StockMovement> movements, AppLocalizations l10n) {
   final now = DateTime.now();
   final today = DateTime(now.year, now.month, now.day);
   final yesterday = today.subtract(const Duration(days: 1));
@@ -20,12 +22,12 @@ List<DateGroup> groupMovementsByDate(List<StockMovement> movements) {
     String key;
 
     if (!date.isBefore(today)) {
-      key = 'Today';
+      key = l10n.today;
     } else if (!date.isBefore(yesterday)) {
-      key = 'Yesterday';
+      key = l10n.yesterday;
     } else if (date.isAfter(twoDaysAgo)) {
       final diff = today.difference(date).inDays;
-      key = '$diff days ago';
+      key = l10n.daysAgo(diff);
     } else {
       key =
           '${date.day.toString().padLeft(2, '0')}/${date.month.toString().padLeft(2, '0')}/${date.year}';

@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:inventory_app/core/theme/app_colors.dart';
+import 'package:inventory_app/core/utils/currency_formatter.dart';
 import 'package:inventory_app/features/inventory/providers/inventory_providers.dart';
 import 'package:inventory_app/features/inventory/providers/stats_providers.dart';
+import 'package:inventory_app/l10n/app_localizations.dart';
 
 class CategoryValuePage extends ConsumerWidget {
   const CategoryValuePage({super.key});
@@ -11,14 +13,15 @@ class CategoryValuePage extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final stats = ref.watch(statsProvider);
     final products = ref.watch(inventoryProvider);
+    final l10n = AppLocalizations.of(context)!;
 
     if (stats.isEmpty) {
       return Scaffold(
         appBar: AppBar(
-          title: const Text('Valor por categoría'),
+          title: Text(l10n.valueByCategory),
         ),
-        body: const Center(
-          child: Text('No hay datos disponibles'),
+        body: Center(
+          child: Text(l10n.noDataAvailable),
         ),
       );
     }
@@ -28,7 +31,7 @@ class CategoryValuePage extends ConsumerWidget {
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Valor por categoría'),
+        title: Text(l10n.valueByCategory),
       ),
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(16),
@@ -54,14 +57,14 @@ class CategoryValuePage extends ConsumerWidget {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
-                          'Total del inventario',
+                          l10n.totalInventory,
                           style: Theme.of(context)
                               .textTheme
                               .bodyMedium
                               ?.copyWith(color: Colors.grey[600]),
                         ),
                         Text(
-                          '\$${totalValue.toStringAsFixed(2)}',
+                          formatCurrency(context, totalValue),
                           style: Theme.of(context)
                               .textTheme
                               .headlineSmall
@@ -75,7 +78,7 @@ class CategoryValuePage extends ConsumerWidget {
             ),
             const SizedBox(height: 16),
             Text(
-              '${sortedCategories.length} categorías',
+              l10n.categoriesCount(sortedCategories.length),
               style: Theme.of(context).textTheme.titleMedium?.copyWith(
                     fontWeight: FontWeight.bold,
                   ),
@@ -93,9 +96,9 @@ class CategoryValuePage extends ConsumerWidget {
                     ? (categoryValue / totalValue * 100)
                     : 0.0;
 
-                final categoryProducts = products
-                    .where((p) =>
-                        (p.category ?? 'Sin categoría') == entry.key)
+                        final categoryProducts = products
+                            .where((p) =>
+                                (p.category ?? l10n.noCategory) == entry.key)
                     .toList()
                   ..sort((a, b) =>
                       (b.quantity * b.price).compareTo(a.quantity * a.price));
@@ -117,14 +120,14 @@ class CategoryValuePage extends ConsumerWidget {
                         style: const TextStyle(fontWeight: FontWeight.bold),
                       ),
                       subtitle: Text(
-                        '\$${categoryValue.toStringAsFixed(2)} · ${percentage.toStringAsFixed(1)}%',
+                        '${formatCurrency(context, categoryValue)} · ${percentage.toStringAsFixed(1)}%',
                         style: TextStyle(color: Colors.grey[600]),
                       ),
                       children: [
                         if (top3.isEmpty)
-                          const Padding(
-                            padding: EdgeInsets.all(16),
-                            child: Text('No hay productos'),
+                          Padding(
+                            padding: const EdgeInsets.all(16),
+                            child: Text(l10n.noProducts),
                           )
                         else
                           ...top3.map((product) {
@@ -135,12 +138,12 @@ class CategoryValuePage extends ConsumerWidget {
                                   const EdgeInsets.symmetric(horizontal: 16),
                               title: Text(product.name),
                               subtitle: Text(
-                                'Qty: ${product.quantity} · \$${product.price.toStringAsFixed(2)}',
+                                '${l10n.quantityAbbreviation}: ${product.quantity} · ${formatCurrency(context, product.price)}',
                                 style: TextStyle(
                                     color: Colors.grey[600], fontSize: 12),
                               ),
                               trailing: Text(
-                                '\$${productValue.toStringAsFixed(2)}',
+                                formatCurrency(context, productValue),
                                 style: const TextStyle(
                                   fontWeight: FontWeight.bold,
                                   color: AppColors.primary,
@@ -152,7 +155,7 @@ class CategoryValuePage extends ConsumerWidget {
                           Padding(
                             padding: const EdgeInsets.only(bottom: 8),
                             child: Text(
-                              '+${categoryProducts.length - 3} productos más',
+                              l10n.moreProducts(categoryProducts.length - 3),
                               style: TextStyle(
                                 color: Colors.grey[500],
                                 fontSize: 12,

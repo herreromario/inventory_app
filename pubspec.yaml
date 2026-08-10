@@ -9,6 +9,9 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
+  flutter_localizations:
+    sdk: flutter
+  intl: any
   go_router: ^17.3.0
   hive_ce: ^2.19.3
   hive_ce_flutter: ^2.3.4
@@ -24,4 +27,5 @@ dev_dependencies:
   hive_ce_generator: ^1.8.0
 
 flutter:
+  generate: true
   uses-material-design: true

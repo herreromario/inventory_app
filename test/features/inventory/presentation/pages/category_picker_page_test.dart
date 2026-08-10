@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:hive_ce/hive.dart';
@@ -6,6 +7,7 @@ import 'package:inventory_app/features/inventory/data/models/category.dart';
 import 'package:inventory_app/features/inventory/data/repositories/category_repository.dart';
 import 'package:inventory_app/features/inventory/presentation/pages/category_picker_page.dart';
 import 'package:inventory_app/features/inventory/providers/category_providers.dart';
+import 'package:inventory_app/l10n/app_localizations.dart';
 
 void main() {
   late Box box;
@@ -35,6 +37,13 @@ void main() {
         categoryRepositoryProvider.overrideWithValue(repository),
       ],
       child: MaterialApp(
+        localizationsDelegates: const [
+          AppLocalizations.delegate,
+          GlobalMaterialLocalizations.delegate,
+          GlobalWidgetsLocalizations.delegate,
+          GlobalCupertinoLocalizations.delegate,
+        ],
+        supportedLocales: const [Locale('en')],
         home: CategoryPickerPage(selectedCategory: selectedCategory),
       ),
     );

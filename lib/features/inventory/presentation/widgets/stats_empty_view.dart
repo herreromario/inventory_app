@@ -1,11 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:inventory_app/core/theme/app_colors.dart';
+import 'package:inventory_app/l10n/app_localizations.dart';
 
 class StatsEmptyView extends StatelessWidget {
   const StatsEmptyView({super.key});
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
+
     return Center(
       child: Padding(
         padding: const EdgeInsets.all(32),
@@ -27,14 +30,14 @@ class StatsEmptyView extends StatelessWidget {
             ),
             const SizedBox(height: 24),
             Text(
-              'Sin datos para mostrar',
+              l10n.noDataToShow,
               style: Theme.of(context).textTheme.headlineSmall?.copyWith(
                     fontWeight: FontWeight.bold,
                   ),
             ),
             const SizedBox(height: 12),
             Text(
-              'Agrega productos y registra movimientos\npara ver las estadísticas del inventario.',
+              l10n.addProductsAndViewStats,
               textAlign: TextAlign.center,
               style: Theme.of(context).textTheme.bodyLarge?.copyWith(
                     color: Colors.grey[600],
@@ -43,17 +46,17 @@ class StatsEmptyView extends StatelessWidget {
             const SizedBox(height: 32),
             _FeatureHighlight(
               icon: Icons.add_shopping_cart,
-              label: 'Registra productos',
+              label: l10n.registerProducts,
             ),
             const SizedBox(height: 12),
             _FeatureHighlight(
               icon: Icons.swap_horiz,
-              label: 'Controla entradas y salidas',
+              label: l10n.controlEntryExit,
             ),
             const SizedBox(height: 12),
             _FeatureHighlight(
               icon: Icons.insights,
-              label: 'Visualiza métricas clave',
+              label: l10n.viewKeyMetrics,
             ),
           ],
         ),

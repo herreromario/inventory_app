@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:inventory_app/features/inventory/data/models/stock_movement.dart';
+import 'package:inventory_app/l10n/app_localizations.dart';
 
 class RecentMovements extends StatelessWidget {
   final List<StockMovement> movements;
@@ -17,6 +18,8 @@ class RecentMovements extends StatelessWidget {
       return const SizedBox.shrink();
     }
 
+    final l10n = AppLocalizations.of(context)!;
+
     return Card(
       elevation: 2,
       shape: RoundedRectangleBorder(
@@ -28,7 +31,7 @@ class RecentMovements extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
-              'Últimos movimientos',
+              l10n.latestMovements,
               style: Theme.of(context).textTheme.titleMedium?.copyWith(
                     fontWeight: FontWeight.bold,
                   ),
@@ -42,7 +45,7 @@ class RecentMovements extends StatelessWidget {
               itemBuilder: (context, index) {
                 final movement = movements[index];
                 final isEntry = movement.type == MovementType.entry;
-                final productName = productNames[movement.productId] ?? 'Producto desconocido';
+                final productName = productNames[movement.productId] ?? l10n.unknownProduct;
                 final dateStr = '${movement.date.day.toString().padLeft(2, '0')}/${movement.date.month.toString().padLeft(2, '0')}/${movement.date.year} ${movement.date.hour.toString().padLeft(2, '0')}:${movement.date.minute.toString().padLeft(2, '0')}';
 
                 return ListTile(
@@ -57,7 +60,7 @@ class RecentMovements extends StatelessWidget {
                     style: const TextStyle(fontWeight: FontWeight.w500),
                   ),
                   subtitle: Text(
-                    '${isEntry ? "Entrada" : "Salida"} · Qty: ${movement.quantity} · $dateStr',
+                    '${isEntry ? l10n.entry : l10n.exit} · ${l10n.quantityAbbreviation}: ${movement.quantity} · $dateStr',
                     style: TextStyle(color: Colors.grey[600], fontSize: 12),
                   ),
                   trailing: Text(

@@ -1,33 +1,35 @@
 import 'package:flutter/material.dart';
+import 'package:inventory_app/l10n/app_localizations.dart';
 
 class ConfirmDialog extends StatelessWidget {
   final String title;
   final String message;
-  final String confirmLabel;
-  final String cancelLabel;
+  final String? confirmLabel;
+  final String? cancelLabel;
 
   const ConfirmDialog({
     super.key,
     required this.title,
     required this.message,
-    this.confirmLabel = 'Delete',
-    this.cancelLabel = 'Cancel',
+    this.confirmLabel,
+    this.cancelLabel,
   });
 
   static Future<bool> show({
     required BuildContext context,
     required String title,
     required String message,
-    String confirmLabel = 'Delete',
-    String cancelLabel = 'Cancel',
+    String? confirmLabel,
+    String? cancelLabel,
   }) async {
+    final l10n = AppLocalizations.of(context)!;
     final result = await showDialog<bool>(
       context: context,
       builder: (context) => ConfirmDialog(
         title: title,
         message: message,
-        confirmLabel: confirmLabel,
-        cancelLabel: cancelLabel,
+        confirmLabel: confirmLabel ?? l10n.delete,
+        cancelLabel: cancelLabel ?? l10n.cancel,
       ),
     );
     return result ?? false;
@@ -41,11 +43,11 @@ class ConfirmDialog extends StatelessWidget {
       actions: [
         TextButton(
           onPressed: () => Navigator.of(context).pop(false),
-          child: Text(cancelLabel),
+          child: Text(cancelLabel ?? ''),
         ),
         FilledButton(
           onPressed: () => Navigator.of(context).pop(true),
-          child: Text(confirmLabel),
+          child: Text(confirmLabel ?? ''),
         ),
       ],
     );

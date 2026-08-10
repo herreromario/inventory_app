@@ -5,6 +5,7 @@ import 'package:inventory_app/core/constants/app_constants.dart';
 import 'package:inventory_app/features/inventory/presentation/widgets/movement_card.dart';
 import 'package:inventory_app/features/inventory/providers/inventory_providers.dart';
 import 'package:inventory_app/features/inventory/providers/movement_providers.dart';
+import 'package:inventory_app/l10n/app_localizations.dart';
 import 'package:inventory_app/shared/widgets/confirm_dialog.dart';
 import 'package:inventory_app/shared/widgets/empty_state.dart';
 
@@ -16,20 +17,21 @@ class MovementHistoryPage extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final movements = ref.watch(movementProvider);
+    final l10n = AppLocalizations.of(context)!;
 
     final sorted = List.of(movements)
       ..sort((a, b) => b.date.compareTo(a.date));
 
-    final groups = groupMovementsByDate(sorted);
+    final groups = groupMovementsByDate(sorted, l10n);
 
     return Scaffold(
-      appBar: AppBar(title: const Text('Movement History')),
+      appBar: AppBar(title: Text(l10n.movementHistory)),
       floatingActionButton: FloatingActionButton(
         onPressed: () => context.push(AppRoutes.addMovement),
         child: const Icon(Icons.add),
       ),
       body: sorted.isEmpty
-          ? const EmptyState(message: 'No movements yet')
+          ? EmptyState(message: l10n.noMovementsYet)
           : ListView.builder(
               itemCount: groups.length,
               itemBuilder: (context, index) {
@@ -63,9 +65,8 @@ class MovementHistoryPage extends ConsumerWidget {
                             onDelete: () async {
                               final confirmed = await ConfirmDialog.show(
                                 context: context,
-                                title: 'Delete Movement',
-                                message:
-                                    'Are you sure you want to delete this movement?',
+                                title: l10n.deleteMovement,
+                                message: l10n.confirmDeleteMovement,
                               );
                               if (confirmed && context.mounted) {
                                 ref
