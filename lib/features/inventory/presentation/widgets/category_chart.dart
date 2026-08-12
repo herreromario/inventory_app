@@ -11,13 +11,7 @@ class CategoryChart extends StatelessWidget {
     required this.data,
   });
 
-  String _formatCurrency(BuildContext context, double value) {
-    if (value >= 1000) {
-      final symbol = formatCurrency(context, value / 1000).replaceAll(RegExp(r'[,.\d]'), '');
-      return '$symbol${(value / 1000).toStringAsFixed(1)}k';
-    }
-    return formatCurrency(context, value);
-  }
+
 
   @override
   Widget build(BuildContext context) {
@@ -86,7 +80,7 @@ class CategoryChart extends StatelessWidget {
                     const SizedBox(width: 8),
                     Flexible(
                       child: Text(
-                        _formatCurrency(context, entry.value),
+                        formatCurrency(context, entry.value),
                         style: const TextStyle(
                           fontWeight: FontWeight.bold,
                           fontSize: 13,

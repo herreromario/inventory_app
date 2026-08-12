@@ -33,6 +33,8 @@ class MovementCard extends StatelessWidget {
           if (productName != null)
             Text(
               productName!,
+              maxLines: 1,
+              overflow: TextOverflow.ellipsis,
               style: const TextStyle(color: Colors.black87),
             ),
           Text(

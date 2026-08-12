@@ -27,7 +27,11 @@ class ProductCard extends StatelessWidget {
         quantity: product.quantity,
         minStock: product.minStock,
       ),
-      title: Text(product.name),
+      title: Text(
+        product.name,
+        maxLines: 1,
+        overflow: TextOverflow.ellipsis,
+      ),
       subtitle: Text(
         '${product.category ?? l10n.noCategory} · ${formatCurrency(context, product.price)} · ${l10n.quantityAbbreviation}: ${product.quantity}',
       ),

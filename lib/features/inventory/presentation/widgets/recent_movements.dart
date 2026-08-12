@@ -72,6 +72,8 @@ class RecentMovements extends StatelessWidget {
                   ),
                   title: Text(
                     productName,
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
                     style: const TextStyle(fontWeight: FontWeight.w500),
                   ),
                   subtitle: Column(
@@ -83,7 +85,7 @@ class RecentMovements extends StatelessWidget {
                       ),
                       Text(
                         movement.reason,
-                        style: TextStyle(color: Colors.grey[500], fontSize: 12),
+                        style: TextStyle(color: Colors.grey[500], fontSize: 11),
                       ),
                     ],
                   ),
