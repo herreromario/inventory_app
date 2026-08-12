@@ -63,7 +63,7 @@ class StatsPage extends ConsumerWidget {
                     physics: const NeverScrollableScrollPhysics(),
                     mainAxisSpacing: 12,
                     crossAxisSpacing: 12,
-                    childAspectRatio: cellWidth / 145,
+                    childAspectRatio: cellWidth / 160,
                     children: [
                       StatsCard(
                         icon: Icons.inventory_2,

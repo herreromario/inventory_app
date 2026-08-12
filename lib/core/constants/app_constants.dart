@@ -9,4 +9,5 @@ class AppRoutes {
   static const String movementHistory = '/movement-history';
   static const String filters = '/filters';
   static const String categoryPicker = '/category-picker';
+  static const String productPicker = '/product-picker';
 }

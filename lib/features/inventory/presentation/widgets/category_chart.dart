@@ -84,8 +84,7 @@ class CategoryChart extends StatelessWidget {
                       ),
                     ),
                     const SizedBox(width: 8),
-                    SizedBox(
-                      width: 50,
+                    Flexible(
                       child: Text(
                         _formatCurrency(context, entry.value),
                         style: const TextStyle(
@@ -93,6 +92,8 @@ class CategoryChart extends StatelessWidget {
                           fontSize: 13,
                         ),
                         textAlign: TextAlign.end,
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
                       ),
                     ),
                   ],

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:inventory_app/core/constants/app_constants.dart';
@@ -195,9 +196,9 @@ class _ProductDetailPageState extends ConsumerState<ProductDetailPage> {
           ),
           const SizedBox(height: 24),
           _buildDetailRow(l10n.categoryLabel, product.category ?? l10n.noCategory),
-          _buildDetailRow(l10n.priceLabel, formatCurrency(context, product.price)),
-          _buildDetailRow(l10n.quantityLabel, product.quantity.toString()),
-          _buildDetailRow(l10n.minStockLabel, product.minStock.toString()),
+          _buildDetailRow(l10n.priceLabelNoStar, formatCurrency(context, product.price)),
+          _buildDetailRow(l10n.quantityLabelNoStar, product.quantity.toString()),
+          _buildDetailRow(l10n.minStockLabelNoStar, product.minStock.toString()),
           if (product.sku != null && product.sku!.isNotEmpty)
             _buildDetailRow(l10n.skuLabel, product.sku!),
           if (product.description != null && product.description!.isNotEmpty)
@@ -334,7 +335,6 @@ class _ProductDetailPageState extends ConsumerState<ProductDetailPage> {
                 labelText: l10n.descriptionLabel,
                 border: const OutlineInputBorder(),
               ),
-              maxLines: 3,
             ),
             const SizedBox(height: 16),
             CategoryPicker(
@@ -423,6 +423,10 @@ class _ProductDetailPageState extends ConsumerState<ProductDetailPage> {
                       labelText: l10n.skuLabel,
                       border: const OutlineInputBorder(),
                     ),
+                    keyboardType: TextInputType.number,
+                    inputFormatters: [
+                      FilteringTextInputFormatter.digitsOnly,
+                    ],
                   ),
                 ),
               ],

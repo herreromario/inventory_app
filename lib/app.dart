@@ -13,6 +13,7 @@ import 'package:inventory_app/features/inventory/presentation/pages/movement_his
 import 'package:inventory_app/features/inventory/presentation/pages/product_detail_page.dart';
 import 'package:inventory_app/features/inventory/presentation/pages/stats_page.dart';
 import 'package:inventory_app/features/inventory/presentation/pages/category_value_page.dart';
+import 'package:inventory_app/features/inventory/presentation/pages/product_picker_page.dart';
 import 'package:inventory_app/l10n/app_localizations.dart';
 import 'package:inventory_app/shared/widgets/scaffold_shell.dart';
 
@@ -81,6 +82,10 @@ final GoRouter _router = GoRouter(
         final selectedCategory = state.extra as String?;
         return CategoryPickerPage(selectedCategory: selectedCategory);
       },
+    ),
+    GoRoute(
+      path: AppRoutes.productPicker,
+      builder: (context, state) => const ProductPickerPage(),
     ),
   ],
 );

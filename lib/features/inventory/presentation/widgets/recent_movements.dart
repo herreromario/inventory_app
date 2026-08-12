@@ -12,6 +12,21 @@ class RecentMovements extends StatelessWidget {
     required this.productNames,
   });
 
+  String _formatDate(DateTime date, AppLocalizations l10n) {
+    final now = DateTime.now();
+    final today = DateTime(now.year, now.month, now.day);
+    final movementDate = DateTime(date.year, date.month, date.day);
+    final time =
+        '${date.hour.toString().padLeft(2, '0')}:${date.minute.toString().padLeft(2, '0')}';
+
+    if (movementDate == today) {
+      return '${l10n.today} $time';
+    } else if (movementDate == today.subtract(const Duration(days: 1))) {
+      return '${l10n.yesterday} $time';
+    }
+    return '${date.day.toString().padLeft(2, '0')}/${date.month.toString().padLeft(2, '0')}/${date.year} $time';
+  }
+
   @override
   Widget build(BuildContext context) {
     if (movements.isEmpty) {
@@ -46,7 +61,7 @@ class RecentMovements extends StatelessWidget {
                 final movement = movements[index];
                 final isEntry = movement.type == MovementType.entry;
                 final productName = productNames[movement.productId] ?? l10n.unknownProduct;
-                final dateStr = '${movement.date.day.toString().padLeft(2, '0')}/${movement.date.month.toString().padLeft(2, '0')}/${movement.date.year} ${movement.date.hour.toString().padLeft(2, '0')}:${movement.date.minute.toString().padLeft(2, '0')}';
+                final dateStr = _formatDate(movement.date, l10n);
 
                 return ListTile(
                   contentPadding: EdgeInsets.zero,
@@ -59,12 +74,21 @@ class RecentMovements extends StatelessWidget {
                     productName,
                     style: const TextStyle(fontWeight: FontWeight.w500),
                   ),
-                  subtitle: Text(
-                    '${isEntry ? l10n.entry : l10n.exit} · ${l10n.quantityAbbreviation}: ${movement.quantity} · $dateStr',
-                    style: TextStyle(color: Colors.grey[600], fontSize: 12),
+                  subtitle: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        '${isEntry ? l10n.entry : l10n.exit} · ${l10n.quantityAbbreviation}: ${movement.quantity}',
+                        style: TextStyle(color: Colors.grey[600], fontSize: 12),
+                      ),
+                      Text(
+                        movement.reason,
+                        style: TextStyle(color: Colors.grey[500], fontSize: 12),
+                      ),
+                    ],
                   ),
                   trailing: Text(
-                    movement.reason,
+                    dateStr,
                     style: TextStyle(color: Colors.grey[500], fontSize: 11),
                   ),
                 );

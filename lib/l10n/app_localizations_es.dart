@@ -351,4 +351,19 @@ class AppLocalizationsEs extends AppLocalizations {
 
   @override
   String get clearFilters => 'Limpiar filtros';
+
+  @override
+  String get selectProduct => 'Seleccionar producto';
+
+  @override
+  String get productNameLabelNoStar => 'Nombre del Producto';
+
+  @override
+  String get quantityLabelNoStar => 'Cantidad';
+
+  @override
+  String get priceLabelNoStar => 'Precio';
+
+  @override
+  String get minStockLabelNoStar => 'Stock Mínimo';
 }

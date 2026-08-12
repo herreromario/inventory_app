@@ -733,6 +733,36 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Clear filters'**
   String get clearFilters;
+
+  /// No description provided for @selectProduct.
+  ///
+  /// In en, this message translates to:
+  /// **'Select a product'**
+  String get selectProduct;
+
+  /// No description provided for @productNameLabelNoStar.
+  ///
+  /// In en, this message translates to:
+  /// **'Product Name'**
+  String get productNameLabelNoStar;
+
+  /// No description provided for @quantityLabelNoStar.
+  ///
+  /// In en, this message translates to:
+  /// **'Quantity'**
+  String get quantityLabelNoStar;
+
+  /// No description provided for @priceLabelNoStar.
+  ///
+  /// In en, this message translates to:
+  /// **'Price'**
+  String get priceLabelNoStar;
+
+  /// No description provided for @minStockLabelNoStar.
+  ///
+  /// In en, this message translates to:
+  /// **'Min Stock'**
+  String get minStockLabelNoStar;
 }
 
 class _AppLocalizationsDelegate

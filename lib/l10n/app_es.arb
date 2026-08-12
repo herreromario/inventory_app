@@ -106,5 +106,10 @@
   "high": "Alto",
   "showResults": "Mostrar resultados",
   "showResultsCount": "Mostrar resultados ({count})",
-  "clearFilters": "Limpiar filtros"
+  "clearFilters": "Limpiar filtros",
+  "selectProduct": "Seleccionar producto",
+  "productNameLabelNoStar": "Nombre del Producto",
+  "quantityLabelNoStar": "Cantidad",
+  "priceLabelNoStar": "Precio",
+  "minStockLabelNoStar": "Stock Mínimo"
 }

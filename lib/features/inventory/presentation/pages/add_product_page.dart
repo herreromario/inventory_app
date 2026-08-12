@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:inventory_app/features/inventory/presentation/widgets/category_picker.dart';
@@ -91,7 +92,6 @@ class _AddProductPageState extends ConsumerState<AddProductPage> {
                   labelText: l10n.descriptionLabel,
                   border: OutlineInputBorder(),
                 ),
-                maxLines: 3,
               ),
               const SizedBox(height: 16),
               CategoryPicker(
@@ -180,6 +180,10 @@ class _AddProductPageState extends ConsumerState<AddProductPage> {
                         labelText: l10n.skuLabel,
                         border: OutlineInputBorder(),
                       ),
+                      keyboardType: TextInputType.number,
+                      inputFormatters: [
+                        FilteringTextInputFormatter.digitsOnly,
+                      ],
                     ),
                   ),
                 ],

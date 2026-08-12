@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:inventory_app/features/inventory/data/models/stock_movement.dart';
+import 'package:inventory_app/features/inventory/presentation/widgets/product_picker.dart';
 import 'package:inventory_app/features/inventory/providers/inventory_providers.dart';
 import 'package:inventory_app/features/inventory/providers/movement_providers.dart';
 import 'package:inventory_app/l10n/app_localizations.dart';
@@ -106,7 +107,6 @@ class _AddMovementPageState extends ConsumerState<AddMovementPage> {
 
   @override
   Widget build(BuildContext context) {
-    final products = ref.watch(inventoryProvider);
     final l10n = AppLocalizations.of(context)!;
     final selectedProduct = _selectedProductId != null
         ? ref
@@ -125,38 +125,12 @@ class _AddMovementPageState extends ConsumerState<AddMovementPage> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
-              if (selectedProduct != null)
-                Card(
-                  child: ListTile(
-                    title: Text(selectedProduct.name),
-                    subtitle: Text(
-                      l10n.currentStock(selectedProduct.quantity),
-                    ),
-                  ),
-                )
-              else
-                DropdownButtonFormField<String>(
-                  initialValue: _selectedProductId,
-                  decoration: InputDecoration(
-                    labelText: l10n.productLabel,
-                    border: OutlineInputBorder(),
-                  ),
-                  items: products
-                      .map((p) => DropdownMenuItem(
-                            value: p.id,
-                            child: Text(p.name),
-                          ))
-                      .toList(),
-                  onChanged: (value) {
-                    setState(() => _selectedProductId = value);
-                  },
-                  validator: (value) {
-                    if (value == null || value.isEmpty) {
-                      return l10n.pleaseSelectProduct;
-                    }
-                    return null;
-                  },
-                ),
+              ProductPicker(
+                selectedProductId: _selectedProductId,
+                onSelected: (productId) {
+                  setState(() => _selectedProductId = productId);
+                },
+              ),
               const SizedBox(height: 16),
               SegmentedButton<MovementType>(
                 segments: [
