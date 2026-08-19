@@ -55,7 +55,7 @@ final statsProvider = Provider<InventoryStats>((ref) {
 
   final valueByCategory = <String, double>{};
   for (final product in products) {
-    final category = product.category ?? 'Sin categoría';
+    final category = product.category ?? 'Uncategorized';
     final value = product.quantity * product.price;
     valueByCategory[category] = (valueByCategory[category] ?? 0) + value;
   }

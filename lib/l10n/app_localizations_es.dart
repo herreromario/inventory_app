@@ -59,7 +59,7 @@ class AppLocalizationsEs extends AppLocalizations {
   String get addProduct => 'Agregar Producto';
 
   @override
-  String get productNameLabel => 'Nombre del Producto *';
+  String get productNameLabel => 'Nombre del producto *';
 
   @override
   String get productNameRequired => 'Por favor ingresa un nombre de producto';
@@ -77,7 +77,7 @@ class AppLocalizationsEs extends AppLocalizations {
   String get invalidNumber => 'Número inválido';
 
   @override
-  String get minStockLabel => 'Stock Mínimo *';
+  String get minStockLabel => 'Stock mínimo *';
 
   @override
   String get priceLabel => 'Precio *';
@@ -231,7 +231,7 @@ class AppLocalizationsEs extends AppLocalizations {
   String get save => 'Guardar';
 
   @override
-  String get valueByCategory => 'Valor por Categoría';
+  String get valueByCategory => 'Valor por categoría';
 
   @override
   String get noDataAvailable => 'No hay datos disponibles';
@@ -248,7 +248,7 @@ class AppLocalizationsEs extends AppLocalizations {
   String get noProducts => 'No hay productos';
 
   @override
-  String get categoriesByValue => 'Categorías por Valor';
+  String get categoriesByValue => 'Categorías por valor';
 
   @override
   String get latestMovements => 'Últimos movimientos';

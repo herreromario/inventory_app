@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:inventory_app/core/constants/app_constants.dart';
+import 'package:inventory_app/core/theme/app_colors.dart';
 import 'package:inventory_app/features/inventory/presentation/widgets/movement_card.dart';
 import 'package:inventory_app/features/inventory/providers/inventory_providers.dart';
 import 'package:inventory_app/features/inventory/providers/movement_providers.dart';
@@ -28,7 +29,7 @@ class MovementHistoryPage extends ConsumerWidget {
       appBar: AppBar(title: Text(l10n.movementHistory)),
       floatingActionButton: FloatingActionButton(
         onPressed: () => context.push(AppRoutes.addMovement),
-        child: const Icon(Icons.add),
+        child: const Icon(Icons.swap_horiz),
       ),
       body: sorted.isEmpty
           ? EmptyState(message: l10n.noMovementsYet)
@@ -45,37 +46,37 @@ class MovementHistoryPage extends ConsumerWidget {
                         group.label,
                         style: const TextStyle(
                           fontSize: 14,
-                          fontWeight: FontWeight.bold,
-                          color: Colors.grey,
+                          fontWeight: FontWeight.w500,
+                          color: AppColors.textMuted,
                         ),
                       ),
                     ),
                     ...group.movements.map((m) {
-                          final product = ref
-                              .read(inventoryProvider.notifier)
-                              .getProductById(m.productId);
-                          return MovementCard(
-                            movement: m,
-                            productName: product?.name,
-                            onEdit: () {
-                              context.push(
-                                '${AppRoutes.addMovement}?movementId=${m.id}',
-                              );
-                            },
-                            onDelete: () async {
-                              final confirmed = await ConfirmDialog.show(
-                                context: context,
-                                title: l10n.deleteMovement,
-                                message: l10n.confirmDeleteMovement,
-                              );
-                              if (confirmed && context.mounted) {
-                                ref
-                                    .read(movementProvider.notifier)
-                                    .deleteMovement(m.id);
-                              }
-                            },
+                      final product = ref
+                          .read(inventoryProvider.notifier)
+                          .getProductById(m.productId);
+                      return MovementCard(
+                        movement: m,
+                        productName: product?.name,
+                        onEdit: () {
+                          context.push(
+                            '${AppRoutes.addMovement}?movementId=${m.id}',
                           );
-                        }),
+                        },
+                        onDelete: () async {
+                          final confirmed = await ConfirmDialog.show(
+                            context: context,
+                            title: l10n.deleteMovement,
+                            message: l10n.confirmDeleteMovement,
+                          );
+                          if (confirmed && context.mounted) {
+                            ref
+                                .read(movementProvider.notifier)
+                                .deleteMovement(m.id);
+                          }
+                        },
+                      );
+                    }),
                   ],
                 );
               },

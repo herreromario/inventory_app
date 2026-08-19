@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import 'package:inventory_app/core/theme/app_colors.dart';
 import 'package:inventory_app/features/inventory/providers/category_providers.dart';
 import 'package:inventory_app/l10n/app_localizations.dart';
 import 'package:inventory_app/shared/widgets/confirm_dialog.dart';
@@ -27,38 +28,79 @@ class CategoryPage extends ConsumerWidget {
               message: l10n.noCategoriesYet,
               icon: Icons.category_outlined,
             )
-          : ListView.builder(
+          : ListView.separated(
+              padding: const EdgeInsets.all(16),
               itemCount: sorted.length,
+              separatorBuilder: (_, index) => const SizedBox(height: 8),
               itemBuilder: (context, index) {
                 final category = sorted[index];
-                return ListTile(
-                  title: Text(category.name),
-                  trailing: Row(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      IconButton(
-                        icon: const Icon(Icons.edit),
-                        onPressed: () =>
-                            _showEditDialog(context, ref, category.id, category.name),
-                      ),
-                      IconButton(
-                        icon: const Icon(Icons.delete),
-                        onPressed: () async {
-                          final confirmed = await ConfirmDialog.show(
-                            context: context,
-                            title: l10n.deleteCategory,
-                            message: l10n.confirmDeleteCategory(category.name),
-                          );
-                          if (confirmed && context.mounted) {
-                            ref
-                                .read(categoryProvider.notifier)
-                                .deleteCategory(category.id);
-                          }
-                        },
+                return Container(
+                  decoration: BoxDecoration(
+                    color: AppColors.cardBackgroundElevated,
+                    borderRadius: BorderRadius.circular(12),
+                    border: Border.all(color: AppColors.border, width: 0.5),
+                    boxShadow: [
+                      BoxShadow(
+                        color: AppColors.cardShadow,
+                        blurRadius: 8,
+                        offset: const Offset(0, 2),
                       ),
                     ],
                   ),
-                  onTap: () => context.pop(category.name),
+                  child: Material(
+                    color: Colors.transparent,
+                    child: InkWell(
+                      borderRadius: BorderRadius.circular(12),
+                      onTap: () => context.pop(category.name),
+                      child: Padding(
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 16, vertical: 14),
+                        child: Row(
+                          children: [
+                            const Icon(
+                              Icons.label,
+                              color: AppColors.textMuted,
+                              size: 20,
+                            ),
+                            const SizedBox(width: 12),
+                            Expanded(
+                              child: Text(
+                                category.name,
+                                style: const TextStyle(
+                                  fontSize: 15,
+                                  fontWeight: FontWeight.w500,
+                                  color: AppColors.textPrimary,
+                                ),
+                              ),
+                            ),
+                            IconButton(
+                              icon: const Icon(Icons.edit, size: 20),
+                              color: AppColors.textMuted,
+                              onPressed: () => _showEditDialog(
+                                  context, ref, category.id, category.name),
+                            ),
+                            IconButton(
+                              icon: const Icon(Icons.delete, size: 20),
+                              color: AppColors.textMuted,
+                              onPressed: () async {
+                                final confirmed = await ConfirmDialog.show(
+                                  context: context,
+                                  title: l10n.deleteCategory,
+                                  message: l10n.confirmDeleteCategory(
+                                      category.name),
+                                );
+                                if (confirmed && context.mounted) {
+                                  ref
+                                      .read(categoryProvider.notifier)
+                                      .deleteCategory(category.id);
+                                }
+                              },
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                  ),
                 );
               },
             ),
@@ -77,7 +119,6 @@ class CategoryPage extends ConsumerWidget {
           controller: controller,
           decoration: InputDecoration(
             labelText: l10n.categoryNameLabel,
-            border: const OutlineInputBorder(),
           ),
           autofocus: true,
         ),
@@ -114,7 +155,6 @@ class CategoryPage extends ConsumerWidget {
           controller: controller,
           decoration: InputDecoration(
             labelText: l10n.categoryNameLabel,
-            border: const OutlineInputBorder(),
           ),
           autofocus: true,
         ),

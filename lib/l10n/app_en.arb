@@ -32,7 +32,7 @@
   "productNotFound": "Product not found",
   "editProduct": "Edit Product",
   "categoryLabel": "Category",
-  "noCategory": "Sin categoría",
+  "noCategory": "No category",
   "createdDate": "Created: {date}",
   "updatedDate": "Updated: {date}",
   "movementHistoryCount": "Movement History ({count})",

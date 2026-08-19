@@ -19,29 +19,33 @@ class StatsEmptyView extends StatelessWidget {
               width: 120,
               height: 120,
               decoration: BoxDecoration(
-                color: AppColors.primary.withValues(alpha: 0.1),
+                color: AppColors.accent.withValues(alpha: 0.1),
                 shape: BoxShape.circle,
               ),
               child: const Icon(
                 Icons.bar_chart,
                 size: 64,
-                color: AppColors.primary,
+                color: AppColors.accent,
               ),
             ),
             const SizedBox(height: 24),
             Text(
               l10n.noDataToShow,
-              style: Theme.of(context).textTheme.headlineSmall?.copyWith(
-                    fontWeight: FontWeight.bold,
-                  ),
+              style: const TextStyle(
+                fontSize: 20,
+                fontWeight: FontWeight.w500,
+                color: AppColors.textPrimary,
+              ),
             ),
             const SizedBox(height: 12),
             Text(
               l10n.addProductsAndViewStats,
               textAlign: TextAlign.center,
-              style: Theme.of(context).textTheme.bodyLarge?.copyWith(
-                    color: Colors.grey[600],
-                  ),
+              style: const TextStyle(
+                fontSize: 14,
+                fontWeight: FontWeight.w400,
+                color: AppColors.textSecondary,
+              ),
             ),
             const SizedBox(height: 32),
             _FeatureHighlight(
@@ -79,13 +83,15 @@ class _FeatureHighlight extends StatelessWidget {
     return Row(
       mainAxisSize: MainAxisSize.min,
       children: [
-        Icon(icon, size: 20, color: AppColors.secondary),
+        Icon(icon, size: 20, color: AppColors.accent),
         const SizedBox(width: 8),
         Text(
           label,
-          style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                color: Colors.grey[700],
-              ),
+          style: const TextStyle(
+            fontSize: 14,
+            fontWeight: FontWeight.w400,
+            color: AppColors.textSecondary,
+          ),
         ),
       ],
     );

@@ -159,7 +159,7 @@ final filteredProductsProvider = Provider<List<Product>>((ref) {
     result = result.where((p) {
       switch (filter.stockStatus) {
         case StockStatus.low:
-          return p.quantity < p.minStock;
+          return p.quantity <= p.minStock;
         case StockStatus.normal:
           return p.quantity >= p.minStock && p.quantity <= p.minStock * 2;
         case StockStatus.high:

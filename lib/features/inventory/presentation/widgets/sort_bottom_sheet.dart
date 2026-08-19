@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:inventory_app/core/theme/app_colors.dart';
 import 'package:inventory_app/features/inventory/providers/filter_providers.dart';
 import 'package:inventory_app/l10n/app_localizations.dart';
 
@@ -26,17 +27,30 @@ class SortBottomSheet extends ConsumerWidget {
             padding: const EdgeInsets.all(16),
             child: Text(
               l10n.sortBy,
-              style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
+              style: const TextStyle(
+                fontSize: 16,
+                fontWeight: FontWeight.w500,
+                color: AppColors.textPrimary,
+              ),
             ),
           ),
           for (final field in SortField.values)
             ListTile(
-              title: Text(_sortFieldLabel(field, l10n)),
+              title: Text(
+                _sortFieldLabel(field, l10n),
+                style: TextStyle(
+                  color: filter.sortField == field
+                      ? AppColors.accent
+                      : AppColors.textPrimary,
+                ),
+              ),
               trailing: filter.sortField == field
                   ? Icon(
                       filter.sortAscending
                           ? Icons.arrow_upward
                           : Icons.arrow_downward,
+                      color: AppColors.accent,
+                      size: 20,
                     )
                   : null,
               onTap: () {

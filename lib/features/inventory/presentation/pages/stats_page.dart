@@ -39,9 +39,7 @@ class StatsPage extends ConsumerWidget {
       appBar: AppBar(
         title: Text(l10n.dashboard),
       ),
-      body: RefreshIndicator(
-        onRefresh: () async {},
-        child: SingleChildScrollView(
+      body: SingleChildScrollView(
           physics: const AlwaysScrollableScrollPhysics(),
           padding: const EdgeInsets.all(16),
           child: Column(
@@ -49,45 +47,47 @@ class StatsPage extends ConsumerWidget {
             children: [
               Text(
                 l10n.inventorySummary,
-                style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                      fontWeight: FontWeight.bold,
-                    ),
+                style: const TextStyle(
+                  fontSize: 22,
+                  fontWeight: FontWeight.w500,
+                  color: AppColors.textPrimary,
+                ),
               ),
               const SizedBox(height: 16),
               LayoutBuilder(
                 builder: (context, constraints) {
-                  final cellWidth = (constraints.maxWidth - 12) / 2;
+                  final cellWidth = (constraints.maxWidth - 8) / 2;
                   return GridView.count(
                     crossAxisCount: 2,
                     shrinkWrap: true,
                     physics: const NeverScrollableScrollPhysics(),
-                    mainAxisSpacing: 12,
-                    crossAxisSpacing: 12,
-                    childAspectRatio: cellWidth / 160,
+                    mainAxisSpacing: 8,
+                    crossAxisSpacing: 8,
+                    childAspectRatio: cellWidth / 100,
                     children: [
                       StatsCard(
                         icon: Icons.inventory_2,
                         value: stats.totalProducts.toString(),
                         label: l10n.totalProducts,
-                        iconColor: AppColors.primary,
+                        iconColor: AppColors.textMuted,
                       ),
                       StatsCard(
                         icon: Icons.attach_money,
                         value: formatCurrency(context, stats.totalValue),
                         label: l10n.totalValue,
-                        iconColor: AppColors.stockGreen,
+                        iconColor: AppColors.success,
                       ),
                       StatsCard(
                         icon: Icons.warning_amber,
                         value: stats.lowStockCount.toString(),
                         label: l10n.lowStock,
-                        iconColor: AppColors.stockRed,
+                        iconColor: AppColors.danger,
                       ),
                       StatsCard(
                         icon: Icons.swap_horiz,
                         value: stats.recentMovements.length.toString(),
                         label: l10n.recentMovementsLabel,
-                        iconColor: AppColors.secondary,
+                        iconColor: AppColors.accent,
                       ),
                     ],
                   );
@@ -115,7 +115,6 @@ class StatsPage extends ConsumerWidget {
             ],
           ),
         ),
-      ),
     );
   }
 }

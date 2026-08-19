@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import 'package:inventory_app/core/theme/app_colors.dart';
 import 'package:inventory_app/features/inventory/data/models/stock_movement.dart';
 import 'package:inventory_app/features/inventory/presentation/widgets/product_picker.dart';
 import 'package:inventory_app/features/inventory/providers/inventory_providers.dart';
@@ -69,6 +71,14 @@ class _AddMovementPageState extends ConsumerState<AddMovementPage> {
     }
 
     try {
+      final quantity = int.tryParse(_quantityController.text);
+      if (quantity == null) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text(l10n.invalidNumber)),
+        );
+        return;
+      }
+
       if (_isEditing) {
         final existing = ref
             .read(movementProvider.notifier)
@@ -77,7 +87,7 @@ class _AddMovementPageState extends ConsumerState<AddMovementPage> {
 
         final updated = existing.copyWith(
           type: _selectedType,
-          quantity: int.parse(_quantityController.text),
+          quantity: quantity,
           reason: _reasonController.text.trim(),
         );
         ref.read(movementProvider.notifier).updateMovement(existing.id, updated);
@@ -89,7 +99,7 @@ class _AddMovementPageState extends ConsumerState<AddMovementPage> {
         ref.read(movementProvider.notifier).addMovement(
               productId: _selectedProductId!,
               type: _selectedType,
-              quantity: int.parse(_quantityController.text),
+              quantity: quantity,
               reason: _reasonController.text.trim(),
             );
 
@@ -97,7 +107,7 @@ class _AddMovementPageState extends ConsumerState<AddMovementPage> {
           SnackBar(content: Text(l10n.movementRegistered)),
         );
       }
-      context.pop();
+      if (mounted) context.pop();
     } catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text(e.toString())),
@@ -108,10 +118,9 @@ class _AddMovementPageState extends ConsumerState<AddMovementPage> {
   @override
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
+    final products = ref.watch(inventoryProvider);
     final selectedProduct = _selectedProductId != null
-        ? ref
-            .read(inventoryProvider.notifier)
-            .getProductById(_selectedProductId!)
+        ? products.where((p) => p.id == _selectedProductId).firstOrNull
         : null;
 
     return Scaffold(
@@ -153,14 +162,14 @@ class _AddMovementPageState extends ConsumerState<AddMovementPage> {
                   backgroundColor: WidgetStateProperty.resolveWith((states) {
                     if (states.contains(WidgetState.selected)) {
                       return _selectedType == MovementType.entry
-                          ? Colors.green
-                          : Colors.red;
+                          ? AppColors.success
+                          : AppColors.danger;
                     }
                     return null;
                   }),
                   foregroundColor: WidgetStateProperty.resolveWith((states) {
                     if (states.contains(WidgetState.selected)) {
-                      return Colors.white;
+                      return AppColors.onPrimary;
                     }
                     return null;
                   }),
@@ -171,9 +180,12 @@ class _AddMovementPageState extends ConsumerState<AddMovementPage> {
                 controller: _quantityController,
                 decoration: InputDecoration(
                   labelText: l10n.quantityLabel,
-                  border: OutlineInputBorder(),
                 ),
-                keyboardType: TextInputType.number,
+                keyboardType: TextInputType.numberWithOptions(
+                    signed: false, decimal: false),
+                inputFormatters: [
+                  FilteringTextInputFormatter.digitsOnly,
+                ],
                 validator: (value) {
                   if (value == null || value.trim().isEmpty) {
                     return l10n.required;
@@ -195,7 +207,6 @@ class _AddMovementPageState extends ConsumerState<AddMovementPage> {
                 controller: _reasonController,
                 decoration: InputDecoration(
                   labelText: l10n.reasonLabel,
-                  border: OutlineInputBorder(),
                 ),
                 validator: (value) {
                   if (value == null || value.trim().isEmpty) {

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:inventory_app/core/constants/app_constants.dart';
+import 'package:inventory_app/core/theme/app_colors.dart';
 import 'package:inventory_app/features/inventory/presentation/widgets/product_card.dart';
 import 'package:inventory_app/features/inventory/presentation/widgets/sort_bottom_sheet.dart';
 import 'package:inventory_app/features/inventory/providers/filter_providers.dart';
@@ -35,7 +36,14 @@ class InventoryPage extends ConsumerWidget {
                   child: TextField(
                     decoration: InputDecoration(
                       hintText: l10n.searchProducts,
-                      prefixIcon: const Icon(Icons.search),
+                      hintStyle: const TextStyle(
+                        color: AppColors.textMuted,
+                        fontSize: 14,
+                      ),
+                      prefixIcon: const Icon(
+                        Icons.search,
+                        color: AppColors.textMuted,
+                      ),
                       suffixIcon: filter.query.isNotEmpty
                           ? IconButton(
                               icon: const Icon(Icons.clear),
@@ -46,8 +54,22 @@ class InventoryPage extends ConsumerWidget {
                               },
                             )
                           : null,
+                      filled: true,
+                      fillColor: AppColors.cardBackgroundElevated,
                       border: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(12),
+                        borderSide: const BorderSide(
+                            color: AppColors.border, width: 0.5),
+                      ),
+                      enabledBorder: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(12),
+                        borderSide: const BorderSide(
+                            color: AppColors.border, width: 0.5),
+                      ),
+                      focusedBorder: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(12),
+                        borderSide: const BorderSide(
+                            color: AppColors.accent, width: 1),
                       ),
                       contentPadding: const EdgeInsets.symmetric(
                         horizontal: 16,

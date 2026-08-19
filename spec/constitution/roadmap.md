@@ -7,6 +7,7 @@
 3. **003 · Estadísticas** — Dashboard con métricas clave del inventario.
 4. **004 · Búsqueda y filtrado** — Buscar y filtrar productos por múltiples criterios.
 5. **005 · Localización (i18n)** — Soporte EN/ES con detección automática del idioma del sistema.
+6. **006 · Rediseño UI** — Aplicación del patrón de diseño (paleta cálida, tarjetas con barra de estado, swipe actions, badges, chips, forms estilizados).
 
 ## Siguiente 🔜
 

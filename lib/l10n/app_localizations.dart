@@ -287,7 +287,7 @@ abstract class AppLocalizations {
   /// No description provided for @noCategory.
   ///
   /// In en, this message translates to:
-  /// **'Sin categoría'**
+  /// **'No category'**
   String get noCategory;
 
   /// No description provided for @createdDate.

@@ -89,60 +89,49 @@ class MovementNotifier extends StateNotifier<List<StockMovement>> {
     final movement = getMovementById(id);
     if (movement == null) return;
 
-    state = [
-      for (final m in state)
-        if (m.id != id) m,
-    ];
-    _repository.delete(id);
-
     final product = _inventoryNotifier.getProductById(movement.productId);
     if (product != null) {
       final newQuantity = movement.type == MovementType.entry
           ? product.quantity - movement.quantity
           : product.quantity + movement.quantity;
+      if (newQuantity < 0) {
+        throw Exception(
+            'Cannot delete movement: would result in negative stock ($newQuantity)');
+      }
       _inventoryNotifier.updateProduct(
         movement.productId,
-        product.copyWith(quantity: newQuantity < 0 ? 0 : newQuantity),
+        product.copyWith(quantity: newQuantity),
       );
     }
+
+    state = [
+      for (final m in state)
+        if (m.id != id) m,
+    ];
+    _repository.delete(id);
   }
 
   void updateMovement(String id, StockMovement updated) {
     final old = getMovementById(id);
     if (old == null) return;
 
-    if (updated.type == MovementType.exit) {
-      final product = _inventoryNotifier.getProductById(updated.productId);
-      if (product == null) return;
+    final product = _inventoryNotifier.getProductById(updated.productId);
+    if (product == null) return;
 
-      final oldQty = old.type == MovementType.entry ? old.quantity : -old.quantity;
-      final newQty = updated.type == MovementType.entry ? updated.quantity : -updated.quantity;
-      final diff = newQty - oldQty;
-      final finalQty = product.quantity + diff;
+    final oldQty = old.type == MovementType.entry ? old.quantity : -old.quantity;
+    final newQty = updated.type == MovementType.entry ? updated.quantity : -updated.quantity;
+    final diff = newQty - oldQty;
+    final finalQty = product.quantity + diff;
 
-      if (finalQty < 0) {
-        throw Exception(
-            'Insufficient stock: available ${product.quantity}, result would be $finalQty');
-      }
-
-      _inventoryNotifier.updateProduct(
-        updated.productId,
-        product.copyWith(quantity: finalQty),
-      );
-    } else {
-      final product = _inventoryNotifier.getProductById(updated.productId);
-      if (product == null) return;
-
-      final oldQty = old.type == MovementType.entry ? old.quantity : -old.quantity;
-      final newQty = updated.type == MovementType.entry ? updated.quantity : -updated.quantity;
-      final diff = newQty - oldQty;
-      final finalQty = product.quantity + diff;
-
-      _inventoryNotifier.updateProduct(
-        updated.productId,
-        product.copyWith(quantity: finalQty < 0 ? 0 : finalQty),
-      );
+    if (finalQty < 0) {
+      throw Exception(
+          'Insufficient stock: available ${product.quantity}, result would be $finalQty');
     }
+
+    _inventoryNotifier.updateProduct(
+      updated.productId,
+      product.copyWith(quantity: finalQty),
+    );
 
     state = [
       for (final m in state)

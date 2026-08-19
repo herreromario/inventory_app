@@ -3,12 +3,12 @@ import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:inventory_app/core/constants/app_constants.dart';
+import 'package:inventory_app/core/theme/app_colors.dart';
 import 'package:inventory_app/core/utils/currency_formatter.dart';
 import 'package:inventory_app/features/inventory/data/models/product.dart';
 import 'package:inventory_app/features/inventory/presentation/widgets/category_picker.dart';
 import 'package:inventory_app/features/inventory/presentation/widgets/date_group_helper.dart';
 import 'package:inventory_app/features/inventory/presentation/widgets/movement_card.dart';
-import 'package:inventory_app/features/inventory/presentation/widgets/stock_indicator.dart';
 import 'package:inventory_app/features/inventory/providers/inventory_providers.dart';
 import 'package:inventory_app/features/inventory/providers/movement_providers.dart';
 import 'package:inventory_app/l10n/app_localizations.dart';
@@ -51,6 +51,7 @@ class _ProductDetailPageState extends ConsumerState<ProductDetailPage> {
           TextEditingController(text: product.quantity.toString());
       _priceController =
           TextEditingController(text: product.price.toString());
+      _priceController.addListener(() => setState(() {}));
       _selectedCategory = product.category;
       _skuController = TextEditingController(text: product.sku ?? '');
       _minStockController =
@@ -88,19 +89,30 @@ class _ProductDetailPageState extends ConsumerState<ProductDetailPage> {
       final product = _getProduct();
       if (product == null) return;
 
+      final quantity = int.tryParse(_quantityController.text);
+      final price = double.tryParse(_priceController.text.replaceAll(',', '.'));
+      final minStock = int.tryParse(_minStockController.text);
+
+      if (quantity == null || price == null || minStock == null) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text(l10n.invalidNumber)),
+        );
+        return;
+      }
+
       final updated = Product(
         id: product.id,
         name: _nameController.text.trim(),
         description: _descriptionController.text.trim().isEmpty
             ? null
             : _descriptionController.text.trim(),
-        quantity: int.parse(_quantityController.text),
-        price: double.parse(_priceController.text),
+        quantity: quantity,
+        price: price,
         category: _selectedCategory,
         sku: _skuController.text.trim().isEmpty
             ? null
             : _skuController.text.trim(),
-        minStock: int.parse(_minStockController.text),
+        minStock: minStock,
         createdAt: product.createdAt,
       );
 
@@ -165,7 +177,7 @@ class _ProductDetailPageState extends ConsumerState<ProductDetailPage> {
                   '${AppRoutes.addMovement}?productId=${product.id}',
                 );
               },
-              child: const Icon(Icons.add),
+              child: const Icon(Icons.swap_horiz),
             )
           : null,
       body: _isEditing ? _buildEditForm() : _buildDetail(product),
@@ -179,20 +191,13 @@ class _ProductDetailPageState extends ConsumerState<ProductDetailPage> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Row(
-            children: [
-              StockIndicator(
-                quantity: product.quantity,
-                minStock: product.minStock,
-              ),
-              const SizedBox(width: 8),
-              Expanded(
-                child: Text(
-                  product.name,
-                  style: Theme.of(context).textTheme.headlineSmall,
-                ),
-              ),
-            ],
+          Text(
+            product.name,
+            style: const TextStyle(
+              fontSize: 22,
+              fontWeight: FontWeight.w500,
+              color: AppColors.textPrimary,
+            ),
           ),
           const SizedBox(height: 24),
           _buildDetailRow(l10n.categoryLabel, product.category ?? l10n.noCategory),
@@ -206,11 +211,17 @@ class _ProductDetailPageState extends ConsumerState<ProductDetailPage> {
           const SizedBox(height: 16),
           Text(
             l10n.createdDate(product.createdAt.toLocal().toString().split('.').first),
-            style: Theme.of(context).textTheme.bodySmall,
+            style: const TextStyle(
+              fontSize: 12,
+              color: AppColors.textMuted,
+            ),
           ),
           Text(
             l10n.updatedDate(product.updatedAt.toLocal().toString().split('.').first),
-            style: Theme.of(context).textTheme.bodySmall,
+            style: const TextStyle(
+              fontSize: 12,
+              color: AppColors.textMuted,
+            ),
           ),
           const SizedBox(height: 16),
           _buildMovementSection(product),
@@ -221,7 +232,7 @@ class _ProductDetailPageState extends ConsumerState<ProductDetailPage> {
 
   Widget _buildDetailRow(String label, String value) {
     return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 8),
+      padding: const EdgeInsets.symmetric(vertical: 12),
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -229,10 +240,22 @@ class _ProductDetailPageState extends ConsumerState<ProductDetailPage> {
             width: 100,
             child: Text(
               label,
-              style: const TextStyle(fontWeight: FontWeight.bold),
+              style: const TextStyle(
+                fontWeight: FontWeight.w500,
+                fontSize: 14,
+                color: AppColors.textPrimary,
+              ),
             ),
           ),
-          Expanded(child: Text(value)),
+          Expanded(
+            child: Text(
+              value,
+              style: const TextStyle(
+                fontSize: 14,
+                color: AppColors.textSecondary,
+              ),
+            ),
+          ),
         ],
       ),
     );
@@ -254,7 +277,11 @@ class _ProductDetailPageState extends ConsumerState<ProductDetailPage> {
         tilePadding: EdgeInsets.zero,
         title: Text(
           l10n.movementHistoryCount(productMovements.length),
-          style: const TextStyle(fontWeight: FontWeight.bold),
+          style: const TextStyle(
+            fontWeight: FontWeight.w500,
+            fontSize: 16,
+            color: AppColors.textPrimary,
+          ),
         ),
         children: [
           if (productMovements.isEmpty)
@@ -267,38 +294,39 @@ class _ProductDetailPageState extends ConsumerState<ProductDetailPage> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Padding(
-                      padding: const EdgeInsets.fromLTRB(0, 8, 0, 4),
+                      padding: const EdgeInsets.fromLTRB(8, 8, 8, 4),
                       child: Text(
                         group.label,
                         style: const TextStyle(
                           fontSize: 13,
-                          fontWeight: FontWeight.bold,
-                          color: Colors.grey,
+                          fontWeight: FontWeight.w500,
+                          color: AppColors.textMuted,
                         ),
                       ),
                     ),
                     ...group.movements.map((m) {
-                          return MovementCard(
-                            movement: m,
-                            onEdit: () {
-                              context.push(
-                                '${AppRoutes.addMovement}?movementId=${m.id}',
-                              );
-                            },
-                            onDelete: () async {
-                              final confirmed = await ConfirmDialog.show(
-                                context: context,
-                                title: l10n.deleteMovement,
-                                message: l10n.confirmDeleteMovement,
-                              );
-                              if (confirmed && mounted) {
-                                ref
-                                    .read(movementProvider.notifier)
-                                    .deleteMovement(m.id);
-                              }
-                            },
+                      return MovementCard(
+                        movement: m,
+                        margin: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                        onEdit: () {
+                          context.push(
+                            '${AppRoutes.addMovement}?movementId=${m.id}',
                           );
-                        }),
+                        },
+                        onDelete: () async {
+                          final confirmed = await ConfirmDialog.show(
+                            context: context,
+                            title: l10n.deleteMovement,
+                            message: l10n.confirmDeleteMovement,
+                          );
+                          if (confirmed && mounted) {
+                            ref
+                                .read(movementProvider.notifier)
+                                .deleteMovement(m.id);
+                          }
+                        },
+                      );
+                    }),
                   ],
                 )),
         ],
@@ -317,13 +345,21 @@ class _ProductDetailPageState extends ConsumerState<ProductDetailPage> {
           children: [
             TextFormField(
               controller: _nameController,
+              maxLength: 50,
+              buildCounter: (context,
+                  {currentLength = 0, maxLength, isFocused = false, required}) {
+                return Text(
+                  '$currentLength/$maxLength',
+                  style: const TextStyle(
+                      color: AppColors.textMuted, fontSize: 12),
+                );
+              },
               decoration: InputDecoration(
                 labelText: l10n.productNameLabel,
-                border: OutlineInputBorder(),
               ),
               validator: (value) {
                 if (value == null || value.trim().isEmpty) {
-                  return l10n.productNameRequired;
+                  return l10n.required;
                 }
                 return null;
               },
@@ -331,9 +367,17 @@ class _ProductDetailPageState extends ConsumerState<ProductDetailPage> {
             const SizedBox(height: 16),
             TextFormField(
               controller: _descriptionController,
+              maxLength: 100,
+              buildCounter: (context,
+                  {currentLength = 0, maxLength, isFocused = false, required}) {
+                return Text(
+                  '$currentLength/$maxLength',
+                  style: const TextStyle(
+                      color: AppColors.textMuted, fontSize: 12),
+                );
+              },
               decoration: InputDecoration(
                 labelText: l10n.descriptionLabel,
-                border: const OutlineInputBorder(),
               ),
             ),
             const SizedBox(height: 16),
@@ -342,7 +386,7 @@ class _ProductDetailPageState extends ConsumerState<ProductDetailPage> {
               onSelected: (category) {
                 setState(() => _selectedCategory = category);
               },
-              ),
+            ),
             const SizedBox(height: 16),
             Row(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -350,11 +394,14 @@ class _ProductDetailPageState extends ConsumerState<ProductDetailPage> {
                 Expanded(
                   child: TextFormField(
                     controller: _quantityController,
+                    keyboardType: TextInputType.numberWithOptions(
+                        signed: false, decimal: false),
+                    inputFormatters: [
+                      FilteringTextInputFormatter.digitsOnly,
+                    ],
                     decoration: InputDecoration(
                       labelText: l10n.quantityLabel,
-                      border: OutlineInputBorder(),
                     ),
-                    keyboardType: TextInputType.number,
                     validator: (value) {
                       if (value == null || value.trim().isEmpty) {
                         return l10n.required;
@@ -371,11 +418,14 @@ class _ProductDetailPageState extends ConsumerState<ProductDetailPage> {
                 Expanded(
                   child: TextFormField(
                     controller: _minStockController,
+                    keyboardType: TextInputType.numberWithOptions(
+                        signed: false, decimal: false),
+                    inputFormatters: [
+                      FilteringTextInputFormatter.digitsOnly,
+                    ],
                     decoration: InputDecoration(
                       labelText: l10n.minStockLabel,
-                      border: const OutlineInputBorder(),
                     ),
-                    keyboardType: TextInputType.number,
                     validator: (value) {
                       if (value == null || value.trim().isEmpty) {
                         return l10n.required;
@@ -397,19 +447,28 @@ class _ProductDetailPageState extends ConsumerState<ProductDetailPage> {
                 Expanded(
                   child: TextFormField(
                     controller: _priceController,
+                    keyboardType:
+                        TextInputType.numberWithOptions(decimal: true),
+                    inputFormatters: [
+                      FilteringTextInputFormatter.allow(
+                          RegExp(r'^\d*[,.]?\d{0,2}')),
+                    ],
                     decoration: InputDecoration(
                       labelText: l10n.priceLabel,
-                      border: const OutlineInputBorder(),
-                      prefixText: Localizations.localeOf(context).languageCode == 'es' ? '€ ' : '\$ ',
+                      suffixText: _priceController.text.isNotEmpty
+                          ? Localizations.localeOf(context).languageCode == 'es'
+                              ? ' €'
+                              : ' \$'
+                          : null,
                     ),
-                    keyboardType: TextInputType.number,
                     validator: (value) {
                       if (value == null || value.trim().isEmpty) {
                         return l10n.required;
                       }
-                      final number = double.tryParse(value);
+                      final number =
+                          double.tryParse(value.replaceAll(',', '.'));
                       if (number == null || number < 0) {
-                        return l10n.invalidNumber;
+                        return l10n.invalidPrice;
                       }
                       return null;
                     },
@@ -419,14 +478,14 @@ class _ProductDetailPageState extends ConsumerState<ProductDetailPage> {
                 Expanded(
                   child: TextFormField(
                     controller: _skuController,
-                    decoration: InputDecoration(
-                      labelText: l10n.skuLabel,
-                      border: const OutlineInputBorder(),
-                    ),
-                    keyboardType: TextInputType.number,
+                    keyboardType: TextInputType.numberWithOptions(
+                        signed: false, decimal: false),
                     inputFormatters: [
                       FilteringTextInputFormatter.digitsOnly,
                     ],
+                    decoration: InputDecoration(
+                      labelText: l10n.skuLabel,
+                    ),
                   ),
                 ),
               ],

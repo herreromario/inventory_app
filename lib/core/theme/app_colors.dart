@@ -3,20 +3,37 @@ import 'package:flutter/material.dart';
 class AppColors {
   AppColors._();
 
-  static const Color primary = Color(0xFF1565C0);
-  static const Color primaryLight = Color(0xFF42A5F5);
-  static const Color primaryDark = Color(0xFF0D47A1);
-  static const Color secondary = Color(0xFF26A69A);
-  static const Color background = Color(0xFFF5F5F5);
-  static const Color surface = Colors.white;
-  static const Color error = Color(0xFFD32F2F);
-  static const Color onPrimary = Colors.white;
-  static const Color onSecondary = Colors.white;
-  static const Color onBackground = Color(0xFF212121);
-  static const Color onSurface = Color(0xFF212121);
-  static const Color onError = Colors.white;
+  // Acción primaria: FAB, precios/valores monetarios, elemento activo de navegación, enlaces
+  static const Color accent = Color(0xFF185FA5);
 
-  static const Color stockGreen = Color(0xFF4CAF50);
-  static const Color stockAmber = Color(0xFFFFC107);
-  static const Color stockRed = Color(0xFFF44336);
+  // Éxito: estado positivo (stock ok), entradas de movimiento
+  static const Color success = Color(0xFF3B6D11);
+  static const Color successBackground = Color(0xFFEAF3DE);
+
+  // Peligro: estado negativo (stock bajo), salidas de movimiento, acción destructiva
+  static const Color danger = Color(0xFFA32D2D);
+  static const Color dangerBackground = Color(0xFFFCEBEB);
+
+  // Texto
+  static const Color textPrimary = Color(0xFF1A1A18);
+  static const Color textSecondary = Color(0xFF5F5E5A);
+  static const Color textMuted = Color(0xFF888780);
+
+  // Fondos
+  static const Color pageBackground = Color(0xFFFAFAF8);
+  static const Color cardBackground = Color(0xFFF1EFE8);
+  static const Color cardBackgroundElevated = Color(0xFFFFFFFF);
+
+  // Borde: #000000 al 12% opacidad
+  static const Color border = Color(0x1F000000);
+
+  // Sombra de tarjetas: #000000 al 4% opacidad
+  static final Color cardShadow = Colors.black.withValues(alpha: 0.04);
+
+  // Compatibilidad con ColorScheme
+  static const Color primary = accent;
+  static const Color error = danger;
+  static const Color onPrimary = Color(0xFFFFFFFF);
+  static const Color onSurface = textPrimary;
+  static const Color onError = Color(0xFFFFFFFF);
 }

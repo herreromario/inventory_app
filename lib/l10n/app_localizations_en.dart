@@ -104,7 +104,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get categoryLabel => 'Category';
 
   @override
-  String get noCategory => 'Sin categoría';
+  String get noCategory => 'No category';
 
   @override
   String createdDate(Object date) {

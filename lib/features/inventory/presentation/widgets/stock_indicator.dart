@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:inventory_app/core/theme/app_colors.dart';
 
 class StockIndicator extends StatelessWidget {
   final int quantity;
@@ -12,16 +13,17 @@ class StockIndicator extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Icon(
-      Icons.circle,
-      color: _getColor(),
-      size: 12,
+    return Container(
+      width: 6,
+      decoration: BoxDecoration(
+        color: _getColor(),
+        borderRadius: BorderRadius.circular(3),
+      ),
     );
   }
 
   Color _getColor() {
-    if (quantity < minStock) return Colors.red;
-    if (quantity == minStock) return Colors.amber;
-    return Colors.green;
+    if (quantity < minStock) return AppColors.danger;
+    return AppColors.success;
   }
 }

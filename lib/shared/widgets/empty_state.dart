@@ -1,14 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:inventory_app/core/theme/app_colors.dart';
 import 'package:inventory_app/l10n/app_localizations.dart';
 
 class EmptyState extends StatelessWidget {
-  final String? messageKey;
   final String? message;
   final IconData icon;
 
   const EmptyState({
     super.key,
-    this.messageKey,
     this.message,
     this.icon = Icons.inventory_2_outlined,
   });
@@ -19,7 +18,7 @@ class EmptyState extends StatelessWidget {
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          Icon(icon, size: 64, color: Colors.grey),
+          Icon(icon, size: 64, color: AppColors.textMuted),
           const SizedBox(height: 16),
           Text(
             message ?? AppLocalizations.of(context)!.noItemsFound,
